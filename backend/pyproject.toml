@@ -17,5 +17,6 @@ dependencies = [
     "python-dotenv",
     "pypdf2>=3.0.1",
     "openai>=1.67.0",
+    "black>=25.1.0",
 ]
 
