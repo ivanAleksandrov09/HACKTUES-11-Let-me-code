@@ -31,7 +31,28 @@ function Home() {
 
                 <p class="something something2">Something</p>
             </div> 
-        
+
+
+            <div className="dashboard-container">
+            <div className="dashboard-content">
+                <div className="dashboard-card">
+                    <h1 className="dashboard-title">Welcome to Your Dashboard</h1>
+                    <div className="dashboard-grid">
+                        <div className="chart-container">
+                            <h2 className="chart-title">Expense Overview</h2>
+                            <div className="chart-wrapper">
+                                <Pie data={chartData} options={options} />
+                            </div>
+                        </div>
+                        <div className="transactions-container">
+                            <h2 className="transactions-title">Recent Transactions</h2>
+                            {printRecentTransactions()}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </body>
     );
 }
