@@ -3,10 +3,20 @@ div {
   font-family: Arial, sans-serif;
 }
 
+:root{
+  --clr-main: #007bff;
+  --clr-accent: #0056b3;
+  --clr-text: #ffefef;
+}
+body{
+  display: grid;
+  grid-template-rows: 50px 900px 50px;
+  margin-bottom: 1%;
+}
 
 /* Styles for the form section */
 form {
-  background-color: #fff;
+  background-color: #ffefdf;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -36,7 +46,7 @@ form textarea {
 }
 
 form input[type="submit"] {
-  background-color: #007bff;
+  background-color: var(--clr-main);
   color: white;
   padding: 10px 20px;
   border: none;
@@ -46,5 +56,99 @@ form input[type="submit"] {
 }
 
 form input[type="submit"]:hover {
-  background-color: #0056b3;
+  background-color: var(--clr-accent);
+}
+
+
+/*navbar CSS*/
+.navbar{
+  display:grid;
+  background-color: #007bff   ;
+  grid-template-rows: 100%;
+  grid-template-columns: 25% 50% 25%;
+  border-radius: 5px;
+  height: clamp(40px,50px,60px);
+  box-shadow:3px 3px 5px #333;
+}
+
+.ul_navbar{
+  display:grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 33% 33% 33%;
+  justify-items: center;
+}
+
+.ul_navbar a{
+  text-decoration: none;
+  color: var(--clr-text);
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+
+.something_container{
+  display: flex;
+  margin-left: 50%;
+}
+
+.something_container a{
+  text-decoration: none;
+  align-content: center;
+}
+
+.ul_navbar a:hover{
+  background-color: #3697ff;
+}
+
+.ul_navbar a:active{
+  background-color: #61adff;
+}
+
+li{
+  display: block;
+  
+}
+
+.name{
+  align-self: center;
+  margin-left:5%;
+  color: var(--clr-text);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.something{
+  justify-self: end;
+  margin-right: 5%;
+  color: var(--clr-text);
+}
+
+/*end of navbar CSS*/
+
+/*footer CSS*/
+
+.footer{
+  display: grid;
+  grid-row: 3;
+  grid-column: 1;
+  grid-template-rows: 100%;
+  grid-template-columns: 25% 50% 25%;
+  background-color: var(--clr-main);
+  height: clamp(40px,50px,60px);
+  border-radius: 5px;
+  align-items: center;
+  box-shadow: 3px 3px 5px #333;
+}
+
+.text{
+  font-size: x-small;
+  color:white;
+  margin-left:5%;
+  
+}
+
+.something2{
+  grid-column: 3;
+  font-size: medium;
 }
