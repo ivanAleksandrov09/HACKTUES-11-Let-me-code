@@ -6,8 +6,68 @@ import { Link } from "react-router-dom";
 import "../styles/Home.css"
 
 function Home() {
-    const [content, setContent] = useState("");
-    const [title, setTitle] = useState("");
+    const [transactions, setTransactions] = useState([{'category': 'Food', 'cost': 100, 'date': '2024-01-01'}, {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, {'category': 'Other', 'cost': 500, 'date': '2024-01-05'}]);
+
+    // useEffect(() => {
+    //     const fetchTransactionsdata = async () => {
+    //         try {
+    //             const response = await api.get('/transactions');
+    //             setTransactions(response.data);
+    //         } catch (error) {
+    //             console.error('Error fetching transactions data:', error);
+    //         }
+    //     };
+    //     fetchTransactionsdata();
+    // }, transactions);
+
+
+    // Sample data for the pie chart
+    const chartData = {
+        labels: [...transactions.map(transaction => transaction.category)],
+        datasets: [
+            {
+                data: [...transactions.map(transaction => transaction.cost)],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'right',
+            },
+            title: {
+                display: true,
+                text: 'Expense Distribution',
+                font: {
+                    size: 16,
+                },
+            },
+        },
+    };
+
+    const printRecentTransactions = () => {
+        return transactions.map((transaction, index) => (
+            <div key={index}>{index + 1}. Category: {transaction.category}, Cost: {transaction.cost}, Date:  {transaction.date}</div>
+        ));
+    };
+
 
     return (
         <body>
