@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css"
 
@@ -9,8 +9,9 @@ function Form({ route, method }) {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
-    const name = method === "login" ? "Login" : "Register";
+    
+    const name = method
+    method === "login" ? "Login" : "Register";
 
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -33,6 +34,7 @@ function Form({ route, method }) {
     };
 
     return (
+        <>
         <form onSubmit={handleSubmit} className="form-container">
             <h1>{name}</h1>
             <input
@@ -53,6 +55,13 @@ function Form({ route, method }) {
                 {name}
             </button>
         </form>
+        <p>
+            {method === "login" ? "Don't have an account? " : "You have an account? "}
+            <Link to={method === "login" ? "/register" : "/login"}>
+                {method === "login" ? "Register" : "Log in"}
+            </Link>
+        </p>
+        </>
     );
 }
 
