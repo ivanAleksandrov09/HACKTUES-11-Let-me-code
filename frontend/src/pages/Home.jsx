@@ -73,48 +73,43 @@ function Home() {
 
     return (
         <>
-            {/*navbar*/}
-            <div className="navbar">
-                <Link className="name" to="/">Logo</Link>
-                <ul className="ul_navbar">
-                    <li><div className="item item-1"><Link to="/">Home</Link></div></li>
-                    <li><div className="item item-2"><Link to="/">Transatctions</Link></div></li>
-                    <li><div className="item item-3"><Link to="/">Info</Link></div></li>
-                </ul>
-                <div className="something_container">
-                <Link className="something Login" to="/Login">Log in</Link>
-                <Link className="something Signup" to="/Register">Sign Up</Link>
-                </div>
-            </div>
-            {/*End of navbar*/}
-            {/*footer*/}
-            <div className="footer">
-                <p className="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
-
-                <p className="something something2">Something</p>
-            </div> 
-
-
-            <div className="dashboard-container">
-            <div className="dashboard-content">
-                <div className="dashboard-card">
-                    <h1 className="dashboard-title">Welcome to Your Dashboard</h1>
-                    <div className="dashboard-grid">
-                        <div className="chart-container">
-                            <h2 className="chart-title">Expense Overview</h2>
-                            <div className="chart-wrapper">
-                                <Pie data={chartData} options={options} />
-                            </div>
-                        </div>
-                        <div className="transactions-container">
-                            <h2 className="transactions-title">Recent Transactions</h2>
-                            {printRecentTransactions()}
-
-                        </div>
+            <div className="main_container">
+                {/*navbar*/}
+                <div className="navbar">
+                    <Link className="name" to="/">Logo</Link>
+                    <ul className="ul_navbar">
+                        <li><div className="item item-1"><Link to="/">Home</Link></div></li>
+                        <li><div className="item item-2"><Link to="/">Transatctions</Link></div></li>
+                        <li><div className="item item-3"><Link to="/">Info</Link></div></li>
+                    </ul>
+                    <div className="something_container">
+                    <Link className="something Login" to="/Login">Log in</Link>
+                    <Link className="something Signup" to="/Register">Sign Up</Link>
                     </div>
                 </div>
+                {/*End of navbar*/}
+                {/*footer*/}
+                <div className="footer">
+                    <p className="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
+
+                    <p className="something something2">Something</p>
+                </div> 
+
+
+                <div className="dashboard-container">
+                    <h1 className="dashboard-title">Welcome to Your Dashboard</h1>
+                    <h2 className="chart-title">Expense Overview:</h2>        
+                    <div className="chart-container">
+                        <div className="chart-wrapper">
+                            <Pie data={chartData} options={options} />
+                        </div>
+                    </div>
+                    <div className="transactions-container">
+                        <h2 className="transactions-title">Recent Transactions</h2>
+                        {printRecentTransactions()}
+                    </div>    
+                </div>
             </div>
-        </div>
         </>
     );
 }
