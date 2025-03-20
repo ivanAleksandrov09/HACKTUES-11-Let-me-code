@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../api";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
 import "../styles/Home.css"
 
