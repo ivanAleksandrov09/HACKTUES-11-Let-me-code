@@ -16,7 +16,7 @@ function Home() {
         {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
         {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, 
         {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, 
-        {'category': 'Others', 'cost': 500, 'date': '2024-01-05'}]);
+        {'category': 'Bills', 'cost': 500, 'date': '2024-01-05'}]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -33,19 +33,23 @@ function Home() {
     function makeBackgroundColors(transactions) {
         const colors = [];
         const transactionCategories = [];
+        let firstColor = 38;
+        let secondColor = 94;
+        let thirdColor = 224;
         
         for (let i = 0; i < transactions.length; i++) {
             if(transactionCategories.includes(transactions[i].category)) {
                 colors.push(colors[transactionCategories.indexOf(transactions[i].category)]);
             } else {
                 transactionCategories.push(transactions[i].category);
-                const color = `rgba(${Math.floor(Math.random() * 255)}, 
-                    ${Math.floor(Math.random() * 255)}, 
-                    ${Math.floor(Math.random() * 255)}, 0.8)`;
+                const color = `rgba(${firstColor}, ${secondColor}, ${thirdColor}, 0.8)`;
                 if(colors.includes(color)) {
                     i--;
                 } else {
                     colors.push(color);
+                    firstColor += 100;
+                    secondColor += 100;
+                    thirdColor += 100;
                 }
             }
         }
