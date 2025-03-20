@@ -5,6 +5,9 @@ import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
 import "../styles/Home.css"
 
+// Register ChartJS components
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 function Home() {
     const [transactions, setTransactions] = useState([{'category': 'Food', 'cost': 100, 'date': '2024-01-01'}, 
         {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
