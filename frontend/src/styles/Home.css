@@ -12,6 +12,7 @@ body{
   display: grid;
   grid-template-rows: 50px 900px 50px;
   margin-bottom: 1%;
+  background-color: #ffffff;
 }
 
 /* Styles for the form section */

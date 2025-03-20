@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../api";
+import { Link } from "react-router-dom";
 import "../styles/Home.css"
 
 function Home() {
@@ -10,15 +11,15 @@ function Home() {
         <body>
             {/*navbar*/}
             <div class="navbar">
-                <a class="name" href="#">Logo</a>
+                <Link class="name" to="/">Logo</Link>
                 <ul class="ul_navbar">
-                    <li><div class="item item-1"><a href="#">Home</a></div></li>
-                    <li><div class="item item-2"><a href="#">Transatctions</a></div></li>
-                    <li><div class="item item-3"><a href="#">Info</a></div></li>
+                    <li><div class="item item-1"><Link to="/">Home</Link></div></li>
+                    <li><div class="item item-2"><Link to="/">Transatctions</Link></div></li>
+                    <li><div class="item item-3"><Link to="/">Info</Link></div></li>
                 </ul>
                 <div class="something_container">
-                <a class="something Login" href="Login.jsx">Log in</a>
-                <a class="something Signup" href="Register.jsx">Sign Up</a>
+                <Link class="something Login" to="/Login">Log in</Link>
+                <Link class="something Signup" to="/Register">Sign Up</Link>
                 </div>
             </div>
             {/*End of navbar*/}
