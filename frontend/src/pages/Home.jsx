@@ -74,26 +74,26 @@ function Home() {
 
 
     return (
-        <body>
+        <>
             {/*navbar*/}
-            <div class="navbar">
-                <Link class="name" to="/">Logo</Link>
-                <ul class="ul_navbar">
-                    <li><div class="item item-1"><Link to="/">Home</Link></div></li>
-                    <li><div class="item item-2"><Link to="/">Transatctions</Link></div></li>
-                    <li><div class="item item-3"><Link to="/">Info</Link></div></li>
+            <div className="navbar">
+                <Link className="name" to="/">Logo</Link>
+                <ul className="ul_navbar">
+                    <li><div className="item item-1"><Link to="/">Home</Link></div></li>
+                    <li><div className="item item-2"><Link to="/">Transatctions</Link></div></li>
+                    <li><div className="item item-3"><Link to="/">Info</Link></div></li>
                 </ul>
-                <div class="something_container">
-                <Link class="something Login" to="/Login">Log in</Link>
-                <Link class="something Signup" to="/Register">Sign Up</Link>
+                <div className="something_container">
+                <Link className="something Login" to="/Login">Log in</Link>
+                <Link className="something Signup" to="/Register">Sign Up</Link>
                 </div>
             </div>
             {/*End of navbar*/}
             {/*footer*/}
-            <div class="footer">
-                <p class="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
+            <div className="footer">
+                <p classNameName="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
 
-                <p class="something something2">Something</p>
+                <p className="something something2">Something</p>
             </div> 
 
 
@@ -117,7 +117,7 @@ function Home() {
                 </div>
             </div>
         </div>
-        </body>
+        </>
     );
 }
 
