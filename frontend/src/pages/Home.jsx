@@ -12,7 +12,11 @@ function Home() {
     // const [outcomesDataCosts, setOutcomesDataCosts] = useState([1000, 200, 300, 400, 500]);
     // const [outcomesDataDate, setOutcomesDataDate] = useState(['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05']);
 
-    const [transactions, setTransactions] = useState([{'category': 'Food', 'cost': 100, 'date': '2024-01-01'}, {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, {'category': 'Other', 'cost': 500, 'date': '2024-01-05'}]);
+    const [transactions, setTransactions] = useState([{'category': 'Food', 'cost': 100, 'date': '2024-01-01'}, 
+        {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
+        {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, 
+        {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, 
+        {'category': 'Bills', 'cost': 500, 'date': '2024-01-05'}]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -26,27 +30,37 @@ function Home() {
     //     fetchTransactionsdata();
     // }, transactions);
 
-
+    function makeBackgroundColors(transactions) {
+        const colors = [];
+        const transactionCategories = [];
+        
+        for (let i = 0; i < transactions.length; i++) {
+            if(transactionCategories.includes(transactions[i].category)) {
+                colors.push(colors[transactionCategories.indexOf(transactions[i].category)]);
+            } else {
+                transactionCategories.push(transactions[i].category);
+                const color = `rgba(${Math.floor(Math.random() * 255)}, 
+                    ${Math.floor(Math.random() * 255)}, 
+                    ${Math.floor(Math.random() * 255)}, 0.8)`;
+                if(colors.includes(color)) {
+                    i--;
+                } else {
+                    colors.push(color);
+                }
+            }
+        }
+        return colors;
+    }
     // Sample data for the pie chart
+    const backgroundColors = makeBackgroundColors(transactions);
+    alert(backgroundColors);
     const chartData = {
         labels: [...transactions.map(transaction => transaction.category)],
         datasets: [
             {
                 data: [...transactions.map(transaction => transaction.cost)],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.8)',
-                    'rgba(54, 162, 235, 0.8)',
-                    'rgba(255, 206, 86, 0.8)',
-                    'rgba(75, 192, 192, 0.8)',
-                    'rgba(153, 102, 255, 0.8)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                ],
+                backgroundColor: backgroundColors,
+                borderColor: backgroundColors.map(color => color.replace('0.8)', '1)')),
                 borderWidth: 1,
             },
         ],
