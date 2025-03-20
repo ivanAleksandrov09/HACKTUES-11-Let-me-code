@@ -16,7 +16,13 @@ function Home() {
         {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
         {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, 
         {'category': 'Bills', 'cost': 400, 'date': '2026-01-04'}, 
-        {'category': 'Bills', 'cost': 500, 'date': '2024-01-05'}]);
+        {'category': 'A', 'cost': 500, 'date': '2024-02-05'},
+        {'category': 'Bs', 'cost': 600, 'date': '2023-01-06'},
+        {'category': 'Z', 'cost': 700, 'date': '2024-01-07'},
+        {'category': 'X', 'cost': 800, 'date': '2021-01-18'},
+        {'category': 'P', 'cost': 900, 'date': '2024-01-09'},
+        {'category': 'A', 'cost': 1000, 'date': '2022-01-10'}
+    ]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -30,40 +36,40 @@ function Home() {
     //     fetchTransactionsdata();
     // }, transactions);
 
-    function makeBackgroundColors(transactions) {
+    function makeBackgroundColors(transactionsSet) {
         const colors = [];
         const transactionCategories = [];
-        let firstDigitColor = 38;
-        let secondDigitColor = 94;
-        let thirdDigitColor = 224;
-        
-        for (let i = 0; i < transactions.length; i++) {
-            if(transactionCategories.includes(transactions[i].category)) {
-                colors.push(colors[transactionCategories.indexOf(transactions[i].category)]);
+        const transactionCategoriesArray = Array.from(transactionsSet);
+        for (let i = 0; i < transactionCategoriesArray.length; i++) {
+            const color = `rgba(${Math.floor(Math.random() * 255)}, 
+               ${Math.floor(Math.random() * 255)}, 
+                ${Math.floor(Math.random() * 255)}, 0.8)`;
+            if(color in colors) {
+                i--;
             } else {
-                transactionCategories.push(transactions[i].category);
-                const color = `rgba(${firstDigitColor}, ${secondDigitColor}, ${thirdDigitColor}, 0.8)`;
-                if(colors.includes(color)) {
-                    i--;
-                } else {
-                    colors.push(color);
-                    firstDigitColor += 100;
-                    secondDigitColor += 100;
-                        thirdDigitColor += 100;
-                }
+                colors.push(color);
+                transactionCategories.push(transactionCategoriesArray[i]);
             }
         }
-        return colors;
+        let dictionary = {};
+        for(let i = 0; i < colors.length; i++) {
+            dictionary[transactionCategories[i]] = colors[i];
+        }
+        console.log(dictionary);
+        return dictionary;
     }
     // Sample data for the pie chart
-    const backgroundColors = makeBackgroundColors(transactions);
+    const transactionsSet = new Set(transactions.map(transaction => transaction.category));
+    const backgroundColors = makeBackgroundColors(transactionsSet);
+    const x = transactions.map(transaction => backgroundColors[transaction.category]);
+    console.log(x);
     const chartData = {
         labels: [...transactions.map(transaction => transaction.category)],
         datasets: [
             {
                 data: [...transactions.map(transaction => transaction.cost)],
-                backgroundColor: backgroundColors,
-                borderColor: backgroundColors.map(color => color.replace('0.8)', '1)')),
+                backgroundColor: x,
+                borderColor: x.map(color => color.replace('0.8)', '1)')),
                 borderWidth: 1,
             },
         ],
@@ -99,7 +105,7 @@ function Home() {
                                         lineDash: [],
                                         lineDashOffset: 0,
                                         lineJoin: 'round',
-                                        lineWidth: 1,
+                                        lineWidth: 3,
                                         strokeStyle: data.datasets[0].backgroundColor[i],
                                         pointStyle: 'circle',
                                         index: i
