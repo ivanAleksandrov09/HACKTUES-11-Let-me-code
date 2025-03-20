@@ -74,6 +74,43 @@ function Home() {
         plugins: {
             legend: {
                 position: 'right',
+                labels: {
+                    font: {
+                        size: 14,
+                        family: 'Arial'
+                    },
+                    color: '#333',
+                    padding: 20,
+                    usePointStyle: true,
+                    generateLabels: function(chart) {
+                        const data = chart.data;
+                        let uniqueLabels = new Set();
+                        let result = [];
+
+                        if (data.labels.length && data.datasets.length) {
+                            data.labels.forEach((label, i) => {
+                                if (!uniqueLabels.has(label)) {
+                                    uniqueLabels.add(label);
+                                    result.push({
+                                        text: `${label}: $${data.datasets[0].data[i]}`,
+                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                        hidden: false,
+                                        lineCap: 'round',
+                                        lineDash: [],
+                                        lineDashOffset: 0,
+                                        lineJoin: 'round',
+                                        lineWidth: 1,
+                                        strokeStyle: data.datasets[0].backgroundColor[i],
+                                        pointStyle: 'circle',
+                                        index: i
+                                    });
+                                }
+                            });
+                            return result;
+                        }
+                        return [];
+                    }
+                }
             },
             title: {
                 display: true,
