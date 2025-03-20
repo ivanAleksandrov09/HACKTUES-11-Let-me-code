@@ -12,11 +12,11 @@ function Home() {
     // const [outcomesDataCosts, setOutcomesDataCosts] = useState([1000, 200, 300, 400, 500]);
     // const [outcomesDataDate, setOutcomesDataDate] = useState(['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05']);
 
-    const [transactions, setTransactions] = useState([{'category': 'Food', 'cost': 100, 'date': '2024-01-01'}, 
+    const [transactions, setTransactions] = useState([{'category': 'Bills', 'cost': 100, 'date': '2024-01-01'}, 
         {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
         {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, 
         {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, 
-        {'category': 'Bills', 'cost': 500, 'date': '2024-01-05'}]);
+        {'category': 'Others', 'cost': 500, 'date': '2024-01-05'}]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -53,7 +53,6 @@ function Home() {
     }
     // Sample data for the pie chart
     const backgroundColors = makeBackgroundColors(transactions);
-    alert(backgroundColors);
     const chartData = {
         labels: [...transactions.map(transaction => transaction.category)],
         datasets: [
