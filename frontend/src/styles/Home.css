@@ -3,6 +3,73 @@ div {
   font-family: Arial, sans-serif;
 }
 
+/* Dashboard container */
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 2rem;
+}
+
+.dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.dashboard-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chart-container {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.chart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.chart-wrapper {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.transactions-container {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.transactions-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
 
 /* Styles for the form section */
 form {
