@@ -5,6 +5,8 @@ import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
 import "../styles/Home.css"
 
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 function Home() {
     const [transactions, setTransactions] = useState([{'category': 'Food', 'cost': 100, 'date': '2024-01-01'}, {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, {'category': 'Other', 'cost': 500, 'date': '2024-01-05'}]);
 
@@ -70,26 +72,26 @@ function Home() {
 
 
     return (
-        <body>
+        <>
             {/*navbar*/}
-            <div class="navbar">
-                <Link class="name" to="/">Logo</Link>
-                <ul class="ul_navbar">
-                    <li><div class="item item-1"><Link to="/">Home</Link></div></li>
-                    <li><div class="item item-2"><Link to="/">Transatctions</Link></div></li>
-                    <li><div class="item item-3"><Link to="/">Info</Link></div></li>
+            <div className="navbar">
+                <Link className="name" to="/">Logo</Link>
+                <ul className="ul_navbar">
+                    <li><div className="item item-1"><Link to="/">Home</Link></div></li>
+                    <li><div className="item item-2"><Link to="/">Transatctions</Link></div></li>
+                    <li><div className="item item-3"><Link to="/">Info</Link></div></li>
                 </ul>
-                <div class="something_container">
-                <Link class="something Login" to="/Login">Log in</Link>
-                <Link class="something Signup" to="/Register">Sign Up</Link>
+                <div className="something_container">
+                <Link className="something Login" to="/Login">Log in</Link>
+                <Link className="something Signup" to="/Register">Sign Up</Link>
                 </div>
             </div>
             {/*End of navbar*/}
             {/*footer*/}
-            <div class="footer">
-                <p class="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
+            <div className="footer">
+                <p className="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
 
-                <p class="something something2">Something</p>
+                <p className="something something2">Something</p>
             </div> 
 
 
@@ -113,7 +115,7 @@ function Home() {
                 </div>
             </div>
         </div>
-        </body>
+        </>
     );
 }
 
