@@ -3,7 +3,8 @@ import api from "../api";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
-import "../styles/Home.css"
+// import "../styles/Home.css"
+import "../styles/new.css"
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -50,6 +51,9 @@ function Home() {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: true,
+        width: 300,  // Add width
+        height: 300, // Add height
         plugins: {
             legend: {
                 position: 'right',
@@ -72,45 +76,45 @@ function Home() {
 
 
     return (
-        <>
-            <div className="main_container">
-                {/*navbar*/}
-                <div className="navbar">
-                    <Link className="name" to="/">Logo</Link>
-                    <ul className="ul_navbar">
-                        <li><div className="item item-1"><Link to="/">Home</Link></div></li>
-                        <li><div className="item item-2"><Link to="/">Transatctions</Link></div></li>
-                        <li><div className="item item-3"><Link to="/">Info</Link></div></li>
+        <div className="fade-in">
+            <header className="header">
+                <nav className="nav-container">
+                    <Link className="nav-links logo" to="/">Logo</Link>
+                    <ul className="nav-links">
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/">Transactions</Link></li>
+                        <li><Link to="/">Info</Link></li>
                     </ul>
-                    <div className="something_container">
-                    <Link className="something Login" to="/Login">Log in</Link>
-                    <Link className="something Signup" to="/Register">Sign Up</Link>
+                    <div>
+                        <Link className="btn btn-primary" to="/Login">Log in</Link>
+                        <Link className="btn btn-primary" to="/Register">Sign Up</Link>
                     </div>
-                </div>
-                {/*End of navbar*/}
-                {/*footer*/}
-                <div className="footer">
-                    <p className="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
+                </nav>
+            </header>
 
-                    <p className="something something2">Something</p>
-                </div> 
-
-
-                <div className="dashboard-container">
-                    <h1 className="dashboard-title">Welcome to Your Dashboard</h1>
-                    <h2 className="chart-title">Expense Overview:</h2>        
-                    <div className="chart-container">
-                        <div className="chart-wrapper">
+            <main className="main-container">
+                <div className="card">
+                    <h1 className="text-center">Welcome to Your Dashboard!</h1>
+                    <h2 className="text-center mt-2">Expense Overview:</h2>        
+                    <div className="grid">
+                        <div className="card p-2 chart-wrapper">
                             <Pie data={chartData} options={options} />
                         </div>
+                        <div className="card p-2 transactions-wrapper">
+                            <h2 className="text-center">Recent Transactions</h2>
+                            {printRecentTransactions()}
+                        </div>    
                     </div>
-                    <div className="transactions-container">
-                        <h2 className="transactions-title">Recent Transactions</h2>
-                        {printRecentTransactions()}
-                    </div>    
                 </div>
-            </div>
-        </>
+            </main>
+
+            <footer className="header mt-2">
+                <div className="nav-container">
+                    <p className="text-center footer-txt">©2025 Let me code. All rights reserved</p>
+                    <p className="text-center footer-txt">Something</p>
+                </div>
+            </footer>
+        </div>
     );
 }
 

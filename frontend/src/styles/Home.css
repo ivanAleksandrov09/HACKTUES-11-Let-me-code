@@ -206,7 +206,7 @@ li{
   grid-row: 2;
   grid-column: 1;
   border-radius: 5px;
-  box-shadow:3px 3px 5px;
+  box-shadow:3px 3px 5px #333;
   height: 80%;
   align-self: center;
   flex-wrap: wrap;

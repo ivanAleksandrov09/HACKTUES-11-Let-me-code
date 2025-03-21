@@ -10,8 +10,7 @@ function Form({ route, method }) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     
-    const name = method
-    method === "login" ? "Login" : "Register";
+    const name = method === "login" ? "Login" : "Register";
 
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -34,34 +33,38 @@ function Form({ route, method }) {
     };
 
     return (
-        <>
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>{name}</h1>
-            <input
-                className="form-input"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-            />
-            <input
-                className="form-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-            <button className="form-button" type="submit">
-                {name}
-            </button>
-        </form>
-        <p>
-            {method === "login" ? "Don't have an account? " : "You have an account? "}
-            <Link to={method === "login" ? "/register" : "/login"}>
-                {method === "login" ? "Register" : "Log in"}
-            </Link>
-        </p>
-        </>
+        <div className="fade-in main-container">
+            <form onSubmit={handleSubmit} className="card p-2">
+                <h1 className="text-center mb-2">{name}</h1>
+                <div className="form-group">
+                    <input
+                        className="form-control"
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Username"
+                    />
+                </div>
+                <div className="form-group">
+                    <input
+                        className="form-control"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                    />
+                </div>
+                <button className="btn btn-primary" type="submit">
+                    {name}
+                </button>
+            </form>
+            <p className="text-center mt-2">
+                {method === "login" ? "Don't have an account? " : "You have an account? "}
+                <Link to={method === "login" ? "/register" : "/login"}>
+                    {method === "login" ? "Register" : "Log in"}
+                </Link>
+            </p>
+        </div>
     );
 }
 
