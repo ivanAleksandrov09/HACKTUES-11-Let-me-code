@@ -28,8 +28,23 @@ class Transaction(models.Model):
     particulars = models.TextField(
         help_text="Description of the transaction, either the sender or collector"
     )
+    currency = models.CharField(
+        max_length=3, default="USD", help_text="Currency of the transaction"
+    )
 
     def __str__(self):
         return (
             f"{self.user.username} - {self.amount} - {self.category} - {self.timestamp}"
         )
+
+
+class Stock(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    ticker = models.CharField(max_length=10)
+    quantity = models.IntegerField()
+    price_per_share = models.DecimalField(max_digits=10, decimal_places=2)
+    purchase_date = models.DateTimeField(default=get_current_time)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.ticker} - {self.quantity} shares at {self.price_per_share} each"

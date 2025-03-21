@@ -39,8 +39,12 @@ transaction_schema = {
             "type": "string",
             "description": "Additional details about the transaction",
         },
+        "currency": {
+            "type": "string",
+            "description": "Currency of the transaction (3-letter code)",
+        },
     },
-    "required": ["amount", "timestamp", "category", "particulars"],
+    "required": ["amount", "timestamp", "category", "particulars", "currency"],
     "additionalProperties": False,
 }
 
@@ -76,7 +80,7 @@ class UploadBankStatementView(APIView):
                         {"type": "input_file", "file_id": ai_uploaded_file.id},
                         {
                             "type": "input_text",
-                            "text": "Please extract the transactions from the bank statement and provide them in JSON format. The JSON should contain an array of transactions, each with the following fields: amount, timestamp, category, particulars.",
+                            "text": "Please extract the transactions from the bank statement and provide them in JSON format. The JSON should contain an array of transactions, each with the following fields: amount, timestamp, category, particulars, and currency.",
                         },
                     ],
                 },
@@ -106,6 +110,7 @@ class UploadBankStatementView(APIView):
                     timestamp=transaction["timestamp"],
                     category=transaction["category"],
                     particulars=transaction["particulars"],
+                    currency=transaction.get("currency", "USD"),
                     user=request.user,
                 )
                 for transaction in json.loads(response.output_text)["steps"]
