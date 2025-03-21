@@ -182,9 +182,7 @@ function Home() {
                     <h1 className="text-center">Welcome to Your Dashboard!</h1>
                     <h2 className="text-center mt-2">Expense Overview:</h2>        
                     <div className="grid">
-                        <div className="card p-2 chart-wrapper">
-                            <Pie data={chartData} options={options} />
-                        </div>
+                        <Chart chartData={chartData} options={options} />
                         <div className="card p-2 transactions-wrapper">
                             <h2 className="text-center">Recent Transactions</h2>
                             <RecentTransactions LastTransactions={transactions} />
