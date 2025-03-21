@@ -1,37 +1,45 @@
 import { useState, useEffect } from "react";
 import api from "../api";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
+import "../styles/Home.css";
 import "../styles/new.css"
 import Chart from "../components/Chart";
 import RecentTransactions from "../components/RecentTransactions";
+import Navigation from "../components/Navigation";
+import TransactionForm from "../components/TransactionForm";
+import IncomeForm from "../components/IncomeForm";
+import TransactionList from "../components/TransactionList";
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Home() {
-    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': 100, 'date': '2024-01-01' },
-    { 'category': 'Transport', 'amount': -200, 'date': '2024-01-02' },
-    { 'category': 'Entertainment', 'amount': -300, 'date': '2024-01-03' },
-    { 'category': 'Bills', 'amount': -400, 'date': '2024-01-04' },
-    { 'category': 'Bills', 'amount': -500, 'date': '2024-01-05' }]);
+    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': -100, 'date': '2024-01-01' }]);
+    const [amount, setAmount] = useState("");
+    const [category, setCategory] = useState("business services");
+    const [currency, setCurrency] = useState("BGN");
+    const [description, setDescription] = useState("");    
+    const [monthlyIncome, setMonthlyIncome] = useState("");
+    const [incomeCurrency, setIncomeCurrency] = useState("BGN");
+    
+    const [total_budget, setTotalBudget] = useState(0);
 
     // useEffect(() => {
-    //     const fetchTransactionsdata = async () => {
-    //         try {
-    //             const response = await api.get('/transactions');
-    //             setTransactions(response.data);
-    //         } catch (error) {
-    //             console.error('Error fetching transactions data:', error);
-    //         }
-    //     };
-    //     fetchTransactionsdata();
-    // }, transactions);
-
-
-    // Sample data for the pie chart
-    const possibleColors = [
-        "rgba(28, 28, 72, 1)",   // Muted Midnight Blue
+        //     const fetchTransactionsdata = async () => {
+            //         try {
+                //             const response = await api.get('/transactions');
+                //             setTransactions(response.data);
+                //         } catch (error) {
+                    //             console.error('Error fetching transactions data:', error);
+                    //         }
+                    //     };
+                    //     fetchTransactionsdata();
+                    // }, transactions);
+                    
+                    
+                    // Sample data for the pie chart
+                    const possibleColors = [
+                        "rgba(28, 28, 72, 1)",   // Muted Midnight Blue
         "rgba(41, 51, 61, 1)",   // Deep Slate Gray
         "rgba(66, 99, 146, 1)",  // Soft Steel Blue
         "rgba(87, 135, 125, 1)", // Gentle Pine Green
@@ -76,7 +84,7 @@ function Home() {
             },
         ],
     };
-
+    
     const options = {
         responsive: true,
         maintainAspectRatio: true,
@@ -97,7 +105,7 @@ function Home() {
                         const data = chart.data;
                         let uniqueLabels = new Set();
                         let result = [];
-
+                        
                         if (data.labels.length && data.datasets.length) {
                             data.labels.forEach((label, i) => {
                                 if (!uniqueLabels.has(label)) {
@@ -134,13 +142,13 @@ function Home() {
     };
 
     // const printRecentTransactions = () => {
-    //     return (
-    //         <table className="transactions-table">
-    //             <thead>
-    //                 <tr>
-    //                     <th>#</th>
-    //                     <th>Category</th>
-    //                     <th>Cost</th>
+        //     return (
+            //         <table className="transactions-table">
+            //             <thead>
+            //                 <tr>
+            //                     <th>#</th>
+            //                     <th>Category</th>
+            //                     <th>Cost</th>
     //                     <th>Date</th>
     //                 </tr>
     //             </thead>
@@ -148,18 +156,184 @@ function Home() {
     //                 {[...transactions]
     //                     .sort((a, b) => new Date(b.date) - new Date(a.date))
     //                     .map((transaction, index) => (
-    //                         <tr key={index}>
-    //                             <td>{index + 1}</td>
-    //                             <td>{transaction.category}</td>
-    //                             <td>${transaction.cost}</td>
-    //                             <td>{transaction.date}</td>
-    //                         </tr>
-    //                     ))}
-    //             </tbody>
-    //         </table>
+        //                         <tr key={index}>
+        //                             <td>{index + 1}</td>
+        //                             <td>{transaction.category}</td>
+        //                             <td>${transaction.cost}</td>
+        //                             <td>{transaction.date}</td>
+        //                         </tr>
+        //                     ))}
+        //             </tbody>
+        //         </table>
     //     );
     // };
-
+    
+    
+    
+    
+    
+    const fetchTransactions = async () => {
+        try {
+            const response = await api.get("/api/transaction/");
+            if (response.status == 200) {
+                const data = response.data
+                setTransactions(data);
+            } else {
+                alert("Failed to fetch transactions.");
+            }
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        }
+    };
+    
+    useEffect(() => {
+        fetchTransactions();
+    }, []);
+    
+    useEffect(() => {
+        const savedIncome = localStorage.getItem('monthlyIncome');
+        const savedCurrency = localStorage.getItem('incomeCurrency');
+        if (savedIncome) setMonthlyIncome(savedIncome);
+        if (savedCurrency) setIncomeCurrency(savedCurrency);
+    }, []);
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+            const response = await api.post("/api/transaction/", {
+                amount, 
+                category, 
+                currency, 
+                description
+            });
+    
+            // Axios uses response.status instead of response.ok
+            if (response.status === 200 || response.status === 201) {
+                alert("Transaction saved successfully!");
+                setAmount("");
+                setCategory("business services");
+                setCurrency("BGN");
+                setDescription("");
+                fetchTransactions(); // Refresh the list of transactions
+            } else {
+                alert("Failed to save transaction.");
+                console.error("Server error:", response.data);
+            }
+        } catch (error) {
+            console.error("Error submitting the form:", error);
+            alert("An error occurred. Please try again.");
+        }
+    };
+    
+    const handleDelete = async (id) => {
+        try {
+            const response = await api.delete(`/api/transaction/${id}/`, {
+                method: "DELETE",
+                headers:{
+                    "Content-Type": "application/json", 
+                },
+            });
+    
+            if (response.ok) {
+                alert("Transaction deleted successfully!");
+                fetchTransactions(); // Refresh the list of transactions
+            } else {
+                const errorData = response.error;
+                alert("Failed to delete transaction.");
+                console.error("Server error:", errorData);
+            }
+        }
+        catch (error) {
+            //console.error("Error deleting the transaction:", error);
+            alert("An error occurred. Please try again.");
+        } 
+    };      
+    
+    const handleIncomeSubmit = async (e) => {
+        e.preventDefault();
+        
+        const incomeData = {
+            amount: parseFloat(monthlyIncome),
+            currency: incomeCurrency,
+            is_addition: true
+        };
+    
+        try {
+            // First, save the income
+            const incomeResponse = await api.post("/api/income/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(incomeData),
+            });
+    
+            if (!incomeResponse.ok) {
+                throw new Error('Failed to save income');
+            }
+    
+            // Then, update the total budget
+            const totalResponse = await api.post("/api/income/total/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ amount: parseFloat(monthlyIncome) }),
+            });
+    
+            if (totalResponse.ok) {
+                const data = totalResponse.data;
+                setTotalBudget(data.total_budget);
+                localStorage.setItem('monthlyIncome', monthlyIncome);
+                localStorage.setItem('incomeCurrency', incomeCurrency);
+                alert('Income added successfully!');
+                await fetchIncome();
+            } else {
+                throw new Error('Failed to update total budget');
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        }
+    };
+    
+    const fetchIncome = async () => {
+        try {
+            const response = await api.get("/api/income/");
+            if (response.ok) {
+                const data = response.data;
+                if (data.length > 0) {
+                    const latestIncome = data[0]; // Get most recent income
+                    setMonthlyIncome(latestIncome.amount.toString());
+                    setIncomeCurrency(latestIncome.currency);
+                    localStorage.setItem('monthlyIncome', latestIncome.amount.toString());
+                    localStorage.setItem('incomeCurrency', latestIncome.currency);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching income:", error);
+        }
+    };
+    
+    // Add this to your useEffect
+    useEffect(() => {
+        fetchTransactions();
+        fetchIncome(); // Add this line
+        fetchTotalBudget();
+    }, []);
+    
+    const fetchTotalBudget = async () => {
+        try {
+            const response = await api.get("/api/income/total");
+            if (response.ok) {
+                const data = response.data;
+                setTotalBudget(data.total_budget);
+            }
+        } catch (error) {
+            console.error("Error fetching total budget:", error);
+        }
+    };
 
     return (
         <>
@@ -224,4 +398,3 @@ function Home() {
 }
 
 export default Home;
-
