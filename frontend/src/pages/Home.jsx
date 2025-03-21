@@ -79,8 +79,8 @@ function Home() {
         <div className="fade-in">
             <header className="header">
                 <nav className="nav-container">
-                    <Link className="nav-links logo" to="/">Logo</Link>
-                    <ul className="nav-links">
+                    <Link className="nav-links logo">Finance Dashboard</Link>
+                        <ul className="nav-links">
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/">Transactions</Link></li>
                         <li><Link to="/">Info</Link></li>
