@@ -5,12 +5,33 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from .open_ai import client
 from datetime import datetime
-import csv, io
+import csv, io, json
 from django.core.cache import cache
 
-prompt = """
-    You are a professional financial analyst. Analyze the following transaction data and provide:
+insights_schema = {
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "Title of the insight or pattern",
+        },
+        "description": {
+            "type": "string",
+            "description": "Detailed description of the insight or pattern",
+        },
+        "category": {
+            "type": "string",
+            "description": "Category of the insight or pattern",
+        },
+    },
+    "required": ["title", "description", "category"],
+    "additionalProperties": False,
+}
 
+prompt = """
+    You are a professional financial analyst. Analyze the following transaction data and provide a comprehensive summary:
+
+    
     1. TRANSACTION ANALYSIS
     - Calculate total income vs expenses
     - Identify spending patterns by category
@@ -36,10 +57,17 @@ prompt = """
     - Evaluate spending sustainability
     - Flag any potential cash flow issues
 
+    Important:
+    - Provide exactly 4 insights, one from each area above
+    - Keep each insight concise and actionable
+    - Include specific numbers and percentages where relevant
+    - Focus on the most important finding from each category
+
     Format the response with clear sections, bullet points, 
     and include relevant percentages and amounts. 
     Present key insights at the beginning and specific recommendations at the end.
     Do not tell the user your thinking process.
+    
 """
 
 
@@ -96,8 +124,6 @@ class UserSummaryView(APIView):
             ]
         )
 
-        print(csvfile.getvalue())
-
         response = client.responses.create(
             model="gpt-4o-mini",
             input=[
@@ -107,10 +133,26 @@ class UserSummaryView(APIView):
                 },
                 {"role": "user", "content": csvfile.getvalue()},
             ],
+            text={
+                "format": {
+                    "type": "json_schema",
+                    "name": "insights",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "steps": {"type": "array", "items": insights_schema}
+                        },
+                        "required": ["steps"],
+                        "additionalProperties": False,
+                    },
+                    "strict": True,
+                },
+            },
+            timeout=10,
         )
 
-        summary_text = response.output_text
+        summary_insights_array = json.loads(response.output_text)["steps"]
 
-        cache.set(cache_key, summary_text, timeout=3 * 24 * 60 * 60)
+        cache.set(cache_key, summary_insights_array, timeout=3 * 24 * 60 * 60)
 
-        return Response(summary_text, status=200)
+        return Response(summary_insights_array, status=200)
