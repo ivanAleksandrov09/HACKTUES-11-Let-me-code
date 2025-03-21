@@ -1,3 +1,4 @@
+import "./RecentTransactions.css";
 export default function RecentTransactions({ LastTransactions }) {
 
     return (
@@ -14,10 +15,10 @@ export default function RecentTransactions({ LastTransactions }) {
                 {[...LastTransactions]
                     .sort((a, b) => new Date(b.date) - new Date(a.date))
                     .map((transaction, index) => (
-                        <tr key={index}>
+                        <tr key={index} className={transaction.amount > 0 ? "income" : "expense"}>
                             <td>{index + 1}</td>
                             <td>{transaction.category}</td>
-                            <td>{transaction.amount}</td>
+                            <td>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(transaction.amount)}</td>
                             <td>{transaction.date}</td>
                         </tr>
                     ))}
