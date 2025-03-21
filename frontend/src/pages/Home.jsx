@@ -9,6 +9,8 @@ import TransactionForm from "../components/TransactionForm";
 import IncomeForm from "../components/IncomeForm";
 import TransactionList from "../components/TransactionList";
 import PieChart from "../components/PieChart";
+import Summary from "../components/summary";
+import PDF_enter from "../components/PDFEnter";
 
 function Home() {
   const [transactions, setTransactions] = useState([]);
@@ -32,7 +34,6 @@ function Home() {
       const response = await api.get("/api/transaction-stats/");
       if (response.status === 200) {
         setTransactionStats(response.data);
-        console.log("Transaction stats:", response.data);
       } else {
         alert("Failed to fetch transaction stats.");
       }
@@ -72,11 +73,12 @@ function Home() {
           <div className="card">
             <h1 className="text-center">Welcome to Your Dashboard!</h1>
             <h2 className="text-center mt-2">Expense Overview:</h2>
+            <PDF_enter />
             <div className="grid">
               <PieChart transactions={transactionStats} />
               <div className="card p-2 transactions-wrapper">
                 <h2 className="text-center">Recent Transactions</h2>
-                <RecentTransactions LastTransactions={transactions} />
+                <RecentTransactions limit={10} />
               </div>
             </div>
           </div>
@@ -88,7 +90,8 @@ function Home() {
           transactions={transactions}
           handleDelete={handleDelete}
         />
-        <IncomeForm />
+        <Summary />
+        {/* <IncomeForm /> */}
       </div>
       <footer className="header mt-2">
         <div className="nav-container">

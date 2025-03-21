@@ -117,4 +117,4 @@ class UploadBankStatementView(APIView):
             ]
         )
 
-        return Response({"response": json.loads(response.output_text)})
+        return Response({"response": json.loads(response.output_text)}, status=201)
