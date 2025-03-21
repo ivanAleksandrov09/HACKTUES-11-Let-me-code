@@ -3,17 +3,18 @@ import api from "../api";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
-import "../styles/Home.css"
+import "../styles/Home.css";
+import RecentTransactions from "../components/RecentTransactions";
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Home() {
-    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'cost': 100, 'date': '2024-01-01' },
-    { 'category': 'Transport', 'cost': 200, 'date': '2024-01-02' },
-    { 'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03' },
-    { 'category': 'Bills', 'cost': 400, 'date': '2024-01-04' },
-    { 'category': 'Bills', 'cost': 500, 'date': '2024-01-05' }]);
+    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': -100, 'date': '2024-01-01' },
+    { 'category': 'Transport', 'amount': -200, 'date': '2024-01-02' },
+    { 'category': 'Entertainment', 'amount': -300, 'date': '2024-01-03' },
+    { 'category': 'Bills', 'amount': -400, 'date': '2024-01-04' },
+    { 'category': 'Bills', 'amount': -500, 'date': '2024-01-05' }]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -67,7 +68,7 @@ function Home() {
         labels: [...transactions.map(transaction => transaction.category)],
         datasets: [
             {
-                data: [...transactions.map(transaction => transaction.cost)],
+                data: [...transactions.map(transaction => transaction.amount)],
                 backgroundColor: x,
                 borderColor: 'rgb(255, 255, 255)',
                 borderWidth: 1,
@@ -128,15 +129,36 @@ function Home() {
         },
     };
 
-    const printRecentTransactions = () => {
-        return [...transactions]
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .map((transaction, index) => (
-                <div key={index}>{index + 1}. Category: {transaction.category},
-                    Cost: {transaction.cost},
-                    Date:  {transaction.date}</div>
-            ));
-    };
+
+
+
+
+    // const printRecentTransactions = () => {
+    //     return (
+    //         <table className="transactions-table">
+    //             <thead>
+    //                 <tr>
+    //                     <th>#</th>
+    //                     <th>Category</th>
+    //                     <th>Amount($)</th>
+    //                     <th>Date</th>
+    //                 </tr>
+    //             </thead>
+    //             <tbody>
+    //                 {[...LastTransactions]
+    //                     .sort((a, b) => new Date(b.date) - new Date(a.date))
+    //                     .map((transaction, index) => (
+    //                         <tr key={index}>
+    //                             <td>{index + 1}</td>
+    //                             <td>{transaction.category}</td>
+    //                             <td>{transaction.amount}</td>
+    //                             <td>{transaction.date}</td>
+    //                         </tr>
+    //                     ))}
+    //             </tbody>
+    //         </table>
+    //     );
+    // };
 
 
     return (
@@ -157,7 +179,7 @@ function Home() {
             {/*End of navbar*/}
             {/*footer*/}
             <div className="footer">
-                <p classNameName="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
+                <p className="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
 
                 <p className="something something2">Something</p>
             </div>
@@ -176,7 +198,7 @@ function Home() {
                             </div>
                             <div className="transactions-container">
                                 <h2 className="transactions-title">Recent Transactions</h2>
-                                {printRecentTransactions()}
+                                <RecentTransactions LastTransactions={transactions} />
 
                             </div>
                         </div>
