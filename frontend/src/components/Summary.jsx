@@ -1,5 +1,6 @@
 import api from "../api";
 import { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 
 const fetchSummary = () => {
   return api
@@ -37,7 +38,7 @@ export default function Summary() {
         return (
           <div key={index} className="summary-item">
             <h3>{insight.title}</h3>
-            <p>{insight.description}</p>
+            <ReactMarkdown>{insight.description}</ReactMarkdown>
           </div>
         );
       })}

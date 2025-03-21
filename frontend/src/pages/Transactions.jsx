@@ -23,7 +23,7 @@ export default function Transactions() {
   const handleDelete = async (id) => {
     try {
       const response = await api.delete(`/api/transaction/${id}/`);
-      if (response.status === 200) {
+      if (response.status === 204) {
         alert("Transaction deleted successfully!");
         fetchTransactions();
       } else {
