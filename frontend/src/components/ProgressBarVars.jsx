@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles/ProgressBar.css';
-import ProgressBar from './Goals_Budget';
+import ProgressBar from '../pages/Goals_Budget';
 
 const BudgetProgressBar = ({ spent, budget, ...props }) => {
     const labelFormat = (value) => `$${value} / $${budget}`;
