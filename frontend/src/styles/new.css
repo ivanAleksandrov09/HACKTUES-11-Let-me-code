@@ -205,6 +205,10 @@ body {
     margin: 0;
 }
 
+canvas{
+    max-height: 400px;
+}
+
 
 /* Transactions container */
 .transactions-wrapper {
@@ -220,10 +224,11 @@ body {
 
 .form-container{
     min-width: 96.5%;
-    gap: 1rem;
+    gap: 2rem;
 }
 
 .transaction-form{
+    margin-top: 5%;
     justify-self: center;
     background-color: var(--clr-main);
     border-radius: 5px;
@@ -252,8 +257,6 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     background-color: var(--clr-main);
     border:none;
+    margin-bottom: 5%;
 }
 
-.income-section{
-    margin-top: 0;
-}
