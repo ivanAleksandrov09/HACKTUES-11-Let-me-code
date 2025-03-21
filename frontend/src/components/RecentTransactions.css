@@ -1,85 +1,96 @@
-/* Table base styles */
-.transactions-container table {
+.transactions-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-family: Arial, sans-serif;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Header styles */
-.transactions-container th {
-    padding: 12px 15px;
+/* Header styling */
+.transactions-table thead {
+    background: #f8f9fa;
+}
+
+.transactions-table th {
+    padding: 15px;
     text-align: left;
-    background-color: #f8f9fa;
-    color: #333;
     font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-}
-
-/* Row styles */
-.transactions-container tr {
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.2s ease;
-}
-
-/* Cell styles */
-.transactions-container td {
-    padding: 12px 15px;
-    vertical-align: middle;
-}
-
-/* Income and Expense styles */
-.transactions-container tr:has(td:nth-child(3):not(:contains("-"))) {
-    background-color: rgba(144, 238, 144, 0.2);  /* Light green for income */
-}
-
-.transactions-container tr:has(td:nth-child(3):contains("-")) {
-    background-color: rgba(255, 182, 193, 0.2);  /* Light red for expense */
-}
-
-/* Hover effects */
-.transactions-container tr:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Column-specific styles */
-.transactions-container td:first-child {  /* Index column */
-    width: 40px;
-    color: #666;
-}
-
-.transactions-container td:nth-child(2) {  /* Category column */
-    font-weight: 500;
-    color: #333;
-}
-
-.transactions-container td:nth-child(3) {  /* Cost column */
-    font-weight: 600;
+    font-size: 0.9rem;
     color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #edf2f7;
 }
 
-.transactions-container td:last-child {  /* Date column */
-    color: #666;
-    font-size: 0.95em;
+/* Body styling */
+.transactions-table td {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    color: #4a5568;
+    border-bottom: 1px solid #edf2f7;
 }
 
-.income {
-    color: rgb(46, 204, 113);  /* Solid green */
+/* Row hover effect */
+.transactions-table tbody tr {
+    transition: all 0.2s ease;
 }
 
-
-
-.expense {
-    color: rgb(231, 76, 60);  /* Solid red */
+.transactions-table tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateX(3px);
 }
 
-
-
-.income td:nth-child(3) {  /* Target the cost column specifically */
-    color: rgb(46, 204, 113);
+/* Income/Expense styling */
+.transactions-table tr.income td:nth-child(3) {
+    color: #10b981;
+    font-weight: 600;
 }
 
-.expense td:nth-child(3) {
-    color: rgb(231, 76, 60);
+.transactions-table tr.expense td:nth-child(3) {
+    color: #ef4444;
+    font-weight: 600;
 }
 
+/* Category column specific styling */
+.transactions-table td:nth-child(2) {
+    font-weight: 500;
+}
+
+/* Date column styling */
+.transactions-table td:nth-child(4) {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .transactions-table {
+        font-size: 0.9rem;
+    }
+    
+    .transactions-table th,
+    .transactions-table td {
+        padding: 10px;
+    }
+}
+
+/* Empty state */
+.transactions-table tbody:empty::after {
+    content: "No transactions found";
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* First and last rows special styling */
+.transactions-table tbody tr:first-child {
+    border-top: none;
+}
+
+.transactions-table tbody tr:last-child td {
+    border-bottom: none;
+}

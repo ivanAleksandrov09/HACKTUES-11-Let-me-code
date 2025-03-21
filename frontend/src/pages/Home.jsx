@@ -14,7 +14,7 @@ function Home() {
     { 'category': 'Transport', 'amount': -200, 'date': '2024-01-02' },
     { 'category': 'Entertainment', 'amount': -300, 'date': '2024-01-03' },
     { 'category': 'Bills', 'amount': -400, 'date': '2024-01-04' },
-    { 'category': 'Bills', 'amount': 500, 'date': '2024-01-05' }]);
+    { 'category': 'Bills', 'amount': -500, 'date': '2024-01-05' }]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
