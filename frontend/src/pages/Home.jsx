@@ -3,18 +3,18 @@ import api from "../api";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
-import "../styles/Home.css";
+import "../styles/Home.css"
+import Chart from "../components/Chart";
 import RecentTransactions from "../components/RecentTransactions";
-
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Home() {
-    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': -100, 'date': '2024-01-01' },
+    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': 100, 'date': '2024-01-01' },
     { 'category': 'Transport', 'amount': -200, 'date': '2024-01-02' },
-    { 'category': 'Entertainment', 'amount': -300, 'date': '2024-01-03' },
-    { 'category': 'Salary', 'amount': 400, 'date': '2024-01-04' },
-    { 'category': 'Bills', 'amount': -500, 'date': '2024-01-05' }]);
+    { 'category': 'Entertainment', 'amount': 300, 'date': '2024-01-03' },
+    { 'category': 'Bills', 'amount': 400, 'date': '2024-01-04' },
+    { 'category': 'Bills', 'amount': 500, 'date': '2024-01-05' }]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -129,10 +129,6 @@ function Home() {
         },
     };
 
-
-
-
-
     // const printRecentTransactions = () => {
     //     return (
     //         <table className="transactions-table">
@@ -140,18 +136,18 @@ function Home() {
     //                 <tr>
     //                     <th>#</th>
     //                     <th>Category</th>
-    //                     <th>Amount($)</th>
+    //                     <th>Cost</th>
     //                     <th>Date</th>
     //                 </tr>
     //             </thead>
     //             <tbody>
-    //                 {[...LastTransactions]
+    //                 {[...transactions]
     //                     .sort((a, b) => new Date(b.date) - new Date(a.date))
     //                     .map((transaction, index) => (
     //                         <tr key={index}>
     //                             <td>{index + 1}</td>
     //                             <td>{transaction.category}</td>
-    //                             <td>{transaction.amount}</td>
+    //                             <td>${transaction.cost}</td>
     //                             <td>{transaction.date}</td>
     //                         </tr>
     //                     ))}
@@ -179,7 +175,7 @@ function Home() {
             {/*End of navbar*/}
             {/*footer*/}
             <div className="footer">
-                <p className="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
+                <p classNameName="text text1">&#169;2025 Let me code.<br></br>All rigths reserved </p>
 
                 <p className="something something2">Something</p>
             </div>
@@ -190,12 +186,7 @@ function Home() {
                     <div className="dashboard-card">
                         <h1 className="dashboard-title">Welcome to Your Dashboard</h1>
                         <div className="dashboard-grid">
-                            <div className="chart-container">
-                                <h2 className="chart-title">Expense Overview</h2>
-                                <div className="chart-wrapper">
-                                    <Pie data={chartData} options={options} />
-                                </div>
-                            </div>
+                            <Chart chartData={chartData} options={options} />
                             <div className="transactions-container">
                                 <h2 className="transactions-title">Recent Transactions</h2>
                                 <RecentTransactions LastTransactions={transactions} />
@@ -210,3 +201,4 @@ function Home() {
 }
 
 export default Home;
+
