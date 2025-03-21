@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from .models import Transaction
 from rest_framework import serializers
-
+from .models import Transaction, Income
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +15,14 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ["id", "amount", "timestamp", "category", "particulars", "currency"]
+        fields = '__all__'
+
+
+class IncomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Income
+        fields = '__all__'
