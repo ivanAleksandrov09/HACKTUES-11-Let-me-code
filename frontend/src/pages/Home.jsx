@@ -6,11 +6,15 @@ import "../styles/Home.css";
 import "../styles/new.css"
 import Chart from "../components/Chart";
 import RecentTransactions from "../components/RecentTransactions";
+import Navigation from "../components/Navigation";
+import TransactionForm from "../components/TransactionForm";
+import IncomeForm from "../components/IncomeForm";
+import TransactionList from "../components/TransactionList";
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Home() {
-    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': 100, 'date': '2024-01-01' }]);
+    const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': -100, 'date': '2024-01-01' }]);
     const [amount, setAmount] = useState("");
     const [category, setCategory] = useState("business services");
     const [currency, setCurrency] = useState("BGN");
@@ -335,18 +339,7 @@ function Home() {
         <>
                 <div className="fade-in">
                     <header className="header">
-                        <nav className="nav-container">
-                            <Link className="nav-links logo">Finance Dashboard</Link>
-                                <ul className="nav-links">
-                                <li><Link to="/">Home</Link></li>
-                                <li><Link to="/">Transactions</Link></li>
-                                <li><Link to="/">Info</Link></li>
-                            </ul>
-                            <div>
-                                <Link className="btn btn-primary" to="/Login">Log in</Link>
-                                <Link className="btn btn-primary" to="/Register">Sign Up</Link>
-                            </div>
-                        </nav>
+                    <Navigation />
                     </header>
 
                     <main className="main-container">
@@ -371,123 +364,34 @@ function Home() {
                     </footer>
                 </div>
                 <div className="form-container">
-                    <h1>Transaction Form</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="amount">Amount</label>
-                        <input
-                            type="number"
-                            id="amount"
-                            name="amount"
-                            step="0.01"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            required
-                            />
+                <TransactionForm 
+                    amount={amount}
+                    setAmount={setAmount}
+                    category={category}
+                    setCategory={setCategory}
+                    currency={currency}
+                    setCurrency={setCurrency}
+                    description={description}
+                    setDescription={setDescription}
+                    handleSubmit={handleSubmit}
+                />
+                
+                <TransactionList 
+                    transactions={transactions}
+                    handleDelete={handleDelete}
+                />
 
-                        <label htmlFor="category">Category</label>
-                        <select
-                            id="category"
-                            name="category"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            required
-                            >
-                            <option value="business services">Business Services</option>
-                            <option value="shopping">Shopping</option>
-                            <option value="entertainment">Entertainment</option>
-                            <option value="groceries">Groceries</option>
-                            <option value="eating out">Eating Out</option>
-                            <option value="bills">Bills</option>
-                            <option value="transport">Transport</option>
-                            <option value="health">Health</option>
-                            <option value="travel">Travel</option>
-                            <option value="finance">Finance</option>
-                            <option value="general">General</option>
-                        </select>
-
-                        <label htmlFor="currency">Currency</label>
-                        <select
-                            id="currency"
-                            name="currency"
-                            value={currency}
-                            onChange={(e) => setCurrency(e.target.value)}
-                            required
-                            >
-                            <option value="BGN">BGN</option>
-                            <option value="EUR">EUR</option>
-                            <option value="USD">USD</option>
-                        </select>
-
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            rows="3"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            ></textarea>
-
-                        <button type="submit">Submit</button>
-                    </form>
-                    <h2>All Transactions</h2>
-                    <ul className="transaction-list">
-                        {transactions.map((transaction, index) => (
-                            <li key={index} className="transaction-item">
-                                <strong>Amount:</strong> {transaction.amount} {transaction.currency} <br />
-                                <strong>Category:</strong> {transaction.category} <br />
-                                <strong>Description:</strong> {transaction.description || "N/A"} <br />
-                                <strong>Time:</strong> {new Date(transaction.time).toLocaleString()}
-                                <button 
-                                    className="delete-btn"
-                                    onClick={() => handleDelete(transaction.id)}
-                                >
-                                    Delete
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="income-section">
-                        <h2>Add to Budget</h2>
-                        <form onSubmit={handleIncomeSubmit}>
-                            <div className="form-group">
-                                <label htmlFor="monthlyIncome">Amount:</label>
-                                <input
-                                    type="number"
-                                    id="monthlyIncome"
-                                    value={monthlyIncome}
-                                    onChange={(e) => setMonthlyIncome(e.target.value)}
-                                    required
-                                    step="0.01"
-                                    min="0"
-                                    />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="incomeCurrency">Currency:</label>
-                                <select
-                                    id="incomeCurrency"
-                                    value={incomeCurrency}
-                                    onChange={(e) => setIncomeCurrency(e.target.value)}
-                                    >
-                                    <option value="BGN">BGN</option>
-                                    <option value="EUR">EUR</option>
-                                    <option value="USD">USD</option>
-                                </select>
-                            </div>
-                            <button type="submit" className="submit-button">
-                                Update Budget
-                            </button>
-                        </form>
-                        <div className="total-display">
-                            <h3>Total Budget: {total_budget} BGN</h3>
-                        </div>
-                    </div>
-
-                <h2>All Transactions</h2>
-                {/* ...existing transactions list... */}
+                <IncomeForm 
+                    monthlyIncome={monthlyIncome}
+                    setMonthlyIncome={setMonthlyIncome}
+                    incomeCurrency={incomeCurrency}
+                    setIncomeCurrency={setIncomeCurrency}
+                    handleIncomeSubmit={handleIncomeSubmit}
+                    total_budget={total_budget}
+                />
             </div>
         </>
     );
 }
-
 
 export default Home;

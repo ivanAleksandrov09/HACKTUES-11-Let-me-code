@@ -2,9 +2,8 @@ from django.urls import path
 from .views.pdf_import import UploadBankStatementView
 from .views.user_summary import UserSummaryView
 from .views.assistant import AssistantVeiw
-from .views.views import TransactionListView
-from . import PurchasedStocksView
-from .views import TransactionCreateView, TransactionListView, TransactionDeleteView, TransactionDeleteView, IncomeListCreateView, TotalBudgetView
+from .views.stocks import PurchasedStocksView
+from .views.views import TransactionListView, TransactionListView, TransactionDeleteView, TransactionDeleteView, IncomeListCreateView
 
 
 urlpatterns = [
@@ -15,5 +14,5 @@ urlpatterns = [
     path("assistant", AssistantVeiw.as_view()),
     path("stocks", PurchasedStocksView.as_view()),
     path('income/', IncomeListCreateView.as_view(), name='income-list-create'),
-    path ('income/total/', TotalBudgetView.as_view(), name='total-budget'),
+    # path ('income/total/', TotalBudgetView.as_view(), name='total-budget'),
 ]
