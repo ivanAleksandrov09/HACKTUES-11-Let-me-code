@@ -1,0 +1,26 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asgiref",
+    "Django",
+    "django-cors-headers",
+    "djangorestframework",
+    "djangorestframework-simplejwt",
+    "PyJWT",
+    "pytz",
+    "sqlparse",
+    "psycopg2-binary",
+    "python-dotenv",
+    "pypdf2>=3.0.1",
+    "openai>=1.67.0",
+    "black>=25.1.0",
+    "redis>=5.2.1",
+    "requests>=2.32.3",
+    "bs4>=0.0.2",
+    "yfinance>=0.2.55",
+]
+

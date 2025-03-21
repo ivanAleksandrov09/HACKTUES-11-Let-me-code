@@ -1,0 +1,85 @@
+/* Table base styles */
+.transactions-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+}
+
+/* Header styles */
+.transactions-container th {
+    padding: 12px 15px;
+    text-align: left;
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Row styles */
+.transactions-container tr {
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+/* Cell styles */
+.transactions-container td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+/* Income and Expense styles */
+.transactions-container tr:has(td:nth-child(3):not(:contains("-"))) {
+    background-color: rgba(144, 238, 144, 0.2);  /* Light green for income */
+}
+
+.transactions-container tr:has(td:nth-child(3):contains("-")) {
+    background-color: rgba(255, 182, 193, 0.2);  /* Light red for expense */
+}
+
+/* Hover effects */
+.transactions-container tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Column-specific styles */
+.transactions-container td:first-child {  /* Index column */
+    width: 40px;
+    color: #666;
+}
+
+.transactions-container td:nth-child(2) {  /* Category column */
+    font-weight: 500;
+    color: #333;
+}
+
+.transactions-container td:nth-child(3) {  /* Cost column */
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.transactions-container td:last-child {  /* Date column */
+    color: #666;
+    font-size: 0.95em;
+}
+
+.income {
+    color: rgb(46, 204, 113);  /* Solid green */
+}
+
+
+
+.expense {
+    color: rgb(231, 76, 60);  /* Solid red */
+}
+
+
+
+.income td:nth-child(3) {  /* Target the cost column specifically */
+    color: rgb(46, 204, 113);
+}
+
+.expense td:nth-child(3) {
+    color: rgb(231, 76, 60);
+}
+
