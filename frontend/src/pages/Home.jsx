@@ -133,32 +133,32 @@ function Home() {
         },
     };
 
-    // const printRecentTransactions = () => {
-    //     return (
-    //         <table className="transactions-table">
-    //             <thead>
-    //                 <tr>
-    //                     <th>#</th>
-    //                     <th>Category</th>
-    //                     <th>Cost</th>
-    //                     <th>Date</th>
-    //                 </tr>
-    //             </thead>
-    //             <tbody>
-    //                 {[...transactions]
-    //                     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    //                     .map((transaction, index) => (
-    //                         <tr key={index}>
-    //                             <td>{index + 1}</td>
-    //                             <td>{transaction.category}</td>
-    //                             <td>${transaction.cost}</td>
-    //                             <td>{transaction.date}</td>
-    //                         </tr>
-    //                     ))}
-    //             </tbody>
-    //         </table>
-    //     );
-    // };
+     const printRecentTransactions = () => {
+         return (
+             <table className="transactions-table">
+                 <thead>
+                     <tr>
+                         <th>#</th>
+                         <th>Category</th>
+                         <th>Cost</th>
+                         <th>Date</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {[...transactions]
+                         .sort((a, b) => new Date(b.date) - new Date(a.date))
+                         .map((transaction, index) => (
+                             <tr key={index}>
+                                 <td>{index + 1}</td>
+                                 <td>{transaction.category}</td>
+                                 <td>${transaction.amount}</td>
+                                 <td>{transaction.date}</td>
+                             </tr>
+                         ))}
+                 </tbody>
+             </table>
+         );
+     };
 
 
     return (
