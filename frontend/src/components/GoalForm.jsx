@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/PBarForm.css';
-import { BudgetProgressBar, GoalProgressBar } from './ProgressBarVars';
+import {GoalProgressBar, BudgetProgressBar} from './ProgressBarVars';
 
 const ProgressBarDisplay = ({ progressData }) => {
   return (
     <div className="progress-display">
-      <BudgetProgressBar 
-        spent={Number(progressData.spent) || 0}
-        budget={Number(progressData.budget) || 100}
-        barColor={progressData.budgetBarColor}
-      />
       <GoalProgressBar 
         current={Number(progressData.current) || 0}
         target={Number(progressData.target) || 100}
@@ -21,13 +16,8 @@ const ProgressBarDisplay = ({ progressData }) => {
   );
 };
 
-const ProgressBarForm = () => {
+const GoalForm = () => {
   const [formData, setFormData] = useState({
-    // Budget Progress Bar
-    spent: '',
-    budget: '',
-    budgetBarColor: '#ff6b6b',
-    
     // Goal Progress Bar  
     current: '',
     target: '',
@@ -45,11 +35,8 @@ const ProgressBarForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/api/progress-bars/', formData);
+      await axios.post('http://localhost:8000/api/goal-form/', formData);
       setFormData({
-        spent: '',
-        budget: '',
-        budgetBarColor: '#ff6b6b',
         current: '',
         target: '',
         goalBarColor: '#8e24aa', 
@@ -66,41 +53,6 @@ const ProgressBarForm = () => {
         <h2>Create New Progress Bars</h2>
         
         <form onSubmit={handleSubmit}>
-          <div className="form-section">
-            <h3>Budget Progress Bar</h3>
-            <div className="form-group">
-              <label>Spent Amount:</label>
-              <input
-                type="number"
-                name="spent"
-                value={formData.spent}
-                onChange={handleChange}
-                placeholder="Enter amount spent"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Total Budget:</label>
-              <input
-                type="number" 
-                name="budget"
-                value={formData.budget}
-                onChange={handleChange}
-                placeholder="Enter total budget"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Bar Color:</label>
-              <input
-                type="color"
-                name="budgetBarColor"
-                value={formData.budgetBarColor}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
           <div className="form-section">
             <h3>Goal Progress Bar</h3>
             <div className="form-group">
@@ -147,7 +99,7 @@ const ProgressBarForm = () => {
             </div>
           </div>
 
-          <button type="submit">Create Progress Bars</button>
+          <button type="submit">Create Goal Bars</button>
         </form>
       </div>
 
@@ -159,4 +111,4 @@ const ProgressBarForm = () => {
   );
 };
 
-export default ProgressBarForm;
+export default GoalForm;

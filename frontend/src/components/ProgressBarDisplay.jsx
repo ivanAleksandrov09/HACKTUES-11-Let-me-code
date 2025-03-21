@@ -8,7 +8,7 @@ const ProgressBarDisplay = ({ progressBars }) => {
                 <div key={bar.id} className="progress-bar-item">
                     <div className="progress-info">
                         <h3>{bar.title}</h3>
-                        <span>Deadline: {new Date(bar.deadline).toLocaleDateString()}</span>
+                        {/* <span>Deadline: {new Date(bar.deadline).toLocaleDateString()}</span> */}
                     </div>
                     <div className="progress-bar-outer">
                         <div 
