@@ -12,16 +12,16 @@ function Home() {
     // const [outcomesDataCosts, setOutcomesDataCosts] = useState([1000, 200, 300, 400, 500]);
     // const [outcomesDataDate, setOutcomesDataDate] = useState(['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05']);
 
-    const [transactions, setTransactions] = useState([{'category': 'Bills', 'cost': 100, 'date': '2025-01-01'}, 
-        {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
-        {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, 
-        {'category': 'Bills', 'cost': 400, 'date': '2026-01-04'}, 
-        {'category': 'A', 'cost': 500, 'date': '2024-02-05'},
-        {'category': 'Bs', 'cost': 600, 'date': '2023-01-06'},
-        {'category': 'Z', 'cost': 700, 'date': '2024-01-07'},
-        {'category': 'X', 'cost': 800, 'date': '2021-01-18'},
-        {'category': 'P', 'cost': 900, 'date': '2024-01-09'},
-        {'category': 'A', 'cost': 1000, 'date': '2022-01-10'}
+    const [transactions, setTransactions] = useState([{ 'category': 'Bills', 'cost': 100, 'date': '2025-01-01' },
+    { 'category': 'Transport', 'cost': 200, 'date': '2024-01-02' },
+    { 'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03' },
+    { 'category': 'Bills', 'cost': 400, 'date': '2026-01-04' },
+    { 'category': 'A', 'cost': 500, 'date': '2024-02-05' },
+    { 'category': 'Bs', 'cost': 600, 'date': '2023-01-06' },
+    { 'category': 'Z', 'cost': 700, 'date': '2024-01-07' },
+    { 'category': 'X', 'cost': 800, 'date': '2021-01-18' },
+    { 'category': 'P', 'cost': 900, 'date': '2024-01-09' },
+    { 'category': 'A', 'cost': 1000, 'date': '2022-01-10' }
     ]);
 
     // useEffect(() => {
@@ -37,23 +37,27 @@ function Home() {
     // }, transactions);
 
     const possibleColors = [
-        'rgba(255, 0, 0, 0.8)',      // Pure Red
-        'rgba(0, 0, 255, 0.8)',      // Pure Blue
-        'rgba(255, 255, 0, 0.8)',    // Pure Yellow
-        'rgba(0, 255, 0, 0.8)',      // Pure Green
-        'rgba(255, 0, 255, 0.8)',    // Magenta
-        'rgba(0, 255, 255, 0.8)',    // Cyan
-        'rgba(255, 128, 0, 0.8)',    // Bright Orange
-        'rgba(128, 0, 255, 0.8)',    // Bright Purple
-        'rgba(255, 0, 128, 0.8)',    // Hot Pink
-        'rgba(0, 255, 128, 0.8)',    // Spring Green
-        // ... add more colors if needed
+        "rgba(28, 28, 72, 1)",   // Muted Midnight Blue
+        "rgba(41, 51, 61, 1)",   // Deep Slate Gray
+        "rgba(66, 99, 146, 1)",  // Soft Steel Blue
+        "rgba(87, 135, 125, 1)", // Gentle Pine Green
+        "rgba(124, 165, 115, 1)",// Mossy Green
+        "rgba(189, 204, 99, 1)", // Muted Lemon Yellow
+        "rgba(224, 206, 149, 1)",// Soft Sand Beige
+        "rgba(197, 145, 91, 1)", // Matte Copper
+        "rgba(199, 111, 107, 1)",// Earthy Coral
+        "rgba(180, 142, 157, 1)",// Dusty Rose
+        "rgba(160, 112, 186, 1)",// Subtle Mauve
+        "rgba(117, 76, 148, 1)", // Matte Amethyst
+        "rgba(77, 62, 102, 1)",  // Smoky Violet
+        "rgba(64, 61, 85, 1)",   // Charcoal Purple
+        "rgba(41, 41, 56, 1)"    // Ashy Deep Gray
     ];
 
     function makeBackgroundColors(transactionsSet) {
         const transactionCategories = Array.from(transactionsSet);
         let dictionary = {};
-        
+
         // Assign a color to each unique category
         transactionCategories.forEach((category, index) => {
             dictionary[category] = possibleColors[index];
@@ -91,7 +95,7 @@ function Home() {
                     color: '#333',
                     padding: 20,
                     usePointStyle: true,
-                    generateLabels: function(chart) {
+                    generateLabels: function (chart) {
                         const data = chart.data;
                         let uniqueLabels = new Set();
                         let result = [];
@@ -133,12 +137,12 @@ function Home() {
 
     const printRecentTransactions = () => {
         return [...transactions]
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .map((transaction, index) => (
-            <div key={index}>{index + 1}. Category: {transaction.category}, 
-            Cost: {transaction.cost}, 
-            Date:  {transaction.date}</div>
-        ));
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .map((transaction, index) => (
+                <div key={index}>{index + 1}. Category: {transaction.category},
+                    Cost: {transaction.cost},
+                    Date:  {transaction.date}</div>
+            ));
     };
 
     return (
