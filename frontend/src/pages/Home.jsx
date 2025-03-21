@@ -187,7 +187,7 @@ function Home() {
                         </div>
                         <div className="card p-2 transactions-wrapper">
                             <h2 className="text-center">Recent Transactions</h2>
-                            {printRecentTransactions()}
+                            <RecentTransactions LastTransactions={transactions} />
                         </div>    
                     </div>
                 </div>
