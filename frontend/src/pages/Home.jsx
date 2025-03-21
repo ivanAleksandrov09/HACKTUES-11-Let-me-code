@@ -12,8 +12,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function Home() {
     const [transactions, setTransactions] = useState([{ 'category': 'Food', 'amount': 100, 'date': '2024-01-01' },
     { 'category': 'Transport', 'amount': -200, 'date': '2024-01-02' },
-    { 'category': 'Entertainment', 'amount': 300, 'date': '2024-01-03' },
-    { 'category': 'Bills', 'amount': 400, 'date': '2024-01-04' },
+    { 'category': 'Entertainment', 'amount': -300, 'date': '2024-01-03' },
+    { 'category': 'Bills', 'amount': -400, 'date': '2024-01-04' },
     { 'category': 'Bills', 'amount': 500, 'date': '2024-01-05' }]);
 
     // useEffect(() => {
@@ -63,12 +63,13 @@ function Home() {
     const transactionsSet = new Set(transactions.map(transaction => transaction.category));
     const backgroundColors = makeBackgroundColors(transactionsSet);
     const x = transactions.map(transaction => backgroundColors[transaction.category]);
+    const transactionsExpense = transactions.filter(transaction => transaction.amount < 0);
     console.log(x);
     const chartData = {
-        labels: [...transactions.map(transaction => transaction.category)],
+        labels: [...transactionsExpense.map(transaction => transaction.category)],
         datasets: [
             {
-                data: [...transactions.map(transaction => transaction.amount)],
+                data: [...transactionsExpense.map(transaction => -transaction.amount)],
                 backgroundColor: x,
                 borderColor: 'rgb(255, 255, 255)',
                 borderWidth: 1,
