@@ -1,33 +1,14 @@
 import { useState, useEffect } from "react";
 import api from "../api";
-import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import "../styles/new.css";
 import RecentTransactions from "../components/RecentTransactions";
-import Navigation from "../components/Navigation";
-import TransactionForm from "../components/TransactionForm";
-import IncomeForm from "../components/IncomeForm";
-import TransactionList from "../components/TransactionList";
 import PieChart from "../components/PieChart";
 import Summary from "../components/summary";
 import PDF_enter from "../components/PDFEnter";
 
 function Home() {
-  const [transactions, setTransactions] = useState([]);
   const [transactionStats, setTransactionStats] = useState([]);
-
-  const fetchTransactions = async () => {
-    try {
-      const response = await api.get("/api/transactions/");
-      if (response.status === 200) {
-        setTransactions(response.data);
-      } else {
-        alert("Failed to fetch transactions.");
-      }
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
-    }
-  };
 
   const fetchTransactionStats = async () => {
     try {
@@ -43,32 +24,12 @@ function Home() {
   };
 
   useEffect(() => {
-    fetchTransactions();
     fetchTransactionStats();
   }, []);
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await api.delete(`/api/transaction/${id}/`);
-      if (response.status === 200) {
-        alert("Transaction deleted successfully!");
-        fetchTransactions();
-      } else {
-        alert("Failed to delete transaction.");
-        console.error("Server error:", response.data);
-      }
-    } catch (error) {
-      alert("An error occurred. Please try again.");
-    }
-  };
-
   return (
     <>
-      <div className="fade-in">
-        <header className="header">
-          <Navigation />
-        </header>
-
+      <div className="nav-container">
         <main className="main-container">
           <div className="card">
             <h1 className="text-center">Welcome to Your Dashboard!</h1>
@@ -85,22 +46,8 @@ function Home() {
         </main>
       </div>
       <div className="form-container">
-        <TransactionForm onTransactionAdded={fetchTransactions} />
-        <TransactionList
-          transactions={transactions}
-          handleDelete={handleDelete}
-        />
         <Summary />
-        {/* <IncomeForm /> */}
       </div>
-      <footer className="header mt-2">
-        <div className="nav-container">
-          <p className="text-center footer-txt">
-            ©2025 Let me code. All rights reserved
-          </p>
-          <p className="text-center footer-txt">Something</p>
-        </div>
-      </footer>
     </>
   );
 }
