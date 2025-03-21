@@ -19,6 +19,7 @@ function Home() {
     const [incomeCurrency, setIncomeCurrency] = useState("BGN");
     
     const [total_budget, setTotalBudget] = useState(0);
+
     // useEffect(() => {
         //     const fetchTransactionsdata = async () => {
             //         try {
