@@ -13,7 +13,7 @@ function Home() {
         {'category': 'Transport', 'cost': 200, 'date': '2024-01-02'}, 
         {'category': 'Entertainment', 'cost': 300, 'date': '2024-01-03'}, 
         {'category': 'Bills', 'cost': 400, 'date': '2024-01-04'}, 
-        {'category': 'Other', 'cost': 500, 'date': '2024-01-05'}]);
+        {'category': 'Bills', 'cost': 500, 'date': '2024-01-05'}]);
 
     // useEffect(() => {
     //     const fetchTransactionsdata = async () => {
@@ -35,18 +35,30 @@ function Home() {
             {
                 data: [...transactions.map(transaction => transaction.cost)],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.8)',
-                    'rgba(54, 162, 235, 0.8)',
-                    'rgba(255, 206, 86, 0.8)',
-                    'rgba(75, 192, 192, 0.8)',
-                    'rgba(153, 102, 255, 0.8)',
+                    "rgba(28, 28, 72, 0.8)",   // Muted Midnight Blue
+                    "rgba(41, 51, 61, 0.8)",   // Deep Slate Gray
+                    "rgba(66, 99, 146, 0.8)",  // Soft Steel Blue
+                    "rgba(87, 135, 125, 0.8)", // Gentle Pine Green
+                    "rgba(124, 165, 115, 0.8)",// Mossy Green
+                    "rgba(189, 204, 99, 0.8)", // Muted Lemon Yellow
+                    "rgba(224, 206, 149, 0.8)",// Soft Sand Beige
+                    "rgba(197, 145, 91, 0.8)", // Matte Copper
+                    "rgba(199, 111, 107, 0.8)",// Earthy Coral
+                    "rgba(180, 142, 157, 0.8)",// Dusty Rose
+                    "rgba(160, 112, 186, 0.8)",// Subtle Mauve
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
+                    "rgba(28, 28, 72, 1)",   // Muted Midnight Blue
+                    "rgba(41, 51, 61, 1)",   // Deep Slate Gray
+                    "rgba(66, 99, 146, 1)",  // Soft Steel Blue
+                    "rgba(87, 135, 125, 1)", // Gentle Pine Green
+                    "rgba(124, 165, 115, 1)",// Mossy Green
+                    "rgba(189, 204, 99, 1)", // Muted Lemon Yellow
+                    "rgba(224, 206, 149, 1)",// Soft Sand Beige
+                    "rgba(197, 145, 91, 1)", // Matte Copper
+                    "rgba(199, 111, 107, 1)",// Earthy Coral
+                    "rgba(180, 142, 157, 1)",// Dusty Rose
+                    "rgba(160, 112, 186, 1)",// Subtle Mauve
                 ],
                 borderWidth: 1,
             },
