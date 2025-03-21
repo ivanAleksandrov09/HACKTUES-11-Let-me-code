@@ -23,12 +23,12 @@ body {
     background-color: var(--clr-accent);
     padding: 1rem 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    max-height: 80%;
+    max-height: 100%;
+    align-content: center;
 }
 
 .nav-container {
     max-width: 100%;
-    
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -68,7 +68,6 @@ body {
 /* Main content */
 .main-container {
     max-width: 100%;
-    margin: 2rem auto;
     padding: 0 2rem;
 }
 
@@ -161,6 +160,8 @@ body {
 /* Animation classes */
 .fade-in {
     animation: fadeIn 0.5s ease-in;
+    display: grid;
+    grid-template-rows: 3.5% 40% 54% 2.5%;
 }
 
 @keyframes fadeIn {
@@ -184,7 +185,8 @@ body {
 }
 
 .mt-2 {
-    margin-top: 2rem;
+    grid-row: 4;
+    padding-bottom: 2.5%;
 }
 
 .mb-2 {
@@ -203,6 +205,7 @@ body {
     margin: 0;
 }
 
+
 /* Transactions container */
 .transactions-wrapper {
     width: 100%;
@@ -215,12 +218,42 @@ body {
     cursor:pointer;
 }
 
+.form-container{
+    min-width: 96.5%;
+    gap: 1rem;
+}
 
-
-.transactions-table{
-    align-self: start;
+.transaction-form{
     justify-self: center;
-    min-width: 100%;
+    background-color: var(--clr-main);
+    border-radius: 5px;
+    width: 50%;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.transaction-list{
+    width:50%;
+    justify-self: center;
+    text-align: start;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: var(--clr-main);
+}
+
+.transaction-list h2{
     text-align: center;
-    margin-left: 10%;
+}
+
+.income-form{
+    margin-top: 0%;
+    width: 50%;
+    justify-self: center;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: var(--clr-main);
+    border:none;
+}
+
+.income-section{
+    margin-top: 0;
 }

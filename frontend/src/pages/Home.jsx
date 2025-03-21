@@ -162,43 +162,64 @@ function Home() {
 
 
     return (
-        <div className="fade-in">
-            <header className="header">
-                <nav className="nav-container">
-                    <Link className="nav-links logo">Finance Dashboard</Link>
-                        <ul className="nav-links">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/">Transactions</Link></li>
-                        <li><Link to="/">Info</Link></li>
-                    </ul>
-                    <div>
-                        <Link className="btn btn-primary" to="/Login">Log in</Link>
-                        <Link className="btn btn-primary" to="/Register">Sign Up</Link>
+        <>
+            <div className="fade-in">
+                <header className="header">
+                <Navigation />
+                </header>
+                <main className="main-container">
+                    <div className="card">
+                        <h1 className="text-center">Welcome to Your Dashboard!</h1>
+                        <h2 className="text-center mt-2">Expense Overview:</h2>        
+                        <div className="grid">
+                            <Chart chartData={chartData} options={options} />
+                            <div className="card p-2 transactions-wrapper">
+                                <h2 className="text-center">Recent Transactions</h2>
+                                <RecentTransactions LastTransactions={transactions} />
+                            </div>    
+                        </div>
                     </div>
-                </nav>
-            </header>
-
-            <main className="main-container">
-                <div className="card">
-                    <h1 className="text-center">Welcome to Your Dashboard!</h1>
-                    <h2 className="text-center mt-2">Expense Overview:</h2>        
-                    <div className="grid">
-                        <Chart chartData={chartData} options={options} />
-                        <div className="card p-2 transactions-wrapper">
-                            <h2 className="text-center">Recent Transactions</h2>
-                            <RecentTransactions LastTransactions={transactions} />
-                        </div>    
+                </main>
+                <footer className="header mt-2">
+                    <div className="nav-container">
+                        <p className="text-center footer-txt">©2025 Let me code. All rights reserved</p>
+                        <p className="text-center footer-txt">Something</p>
+                    </div>
+                </footer>
+                <div className="form-container">
+                    <div className="transaction-form">
+                        <TransactionForm 
+                            amount={amount}
+                            setAmount={setAmount}
+                            category={category}
+                            setCategory={setCategory}
+                            currency={currency}
+                            setCurrency={setCurrency}
+                            description={description}
+                            setDescription={setDescription}
+                            handleSubmit={handleSubmit}
+                        />
+                    </div>
+                    <div className="transaction-list">
+                        <TransactionList 
+                            transactions={transactions}
+                            handleDelete={handleDelete}
+                        />
+                    </div>
+                    <div className="income-form">
+                        <IncomeForm 
+                            monthlyIncome={monthlyIncome}
+                            setMonthlyIncome={setMonthlyIncome}
+                            incomeCurrency={incomeCurrency}
+                            setIncomeCurrency={setIncomeCurrency}
+                            handleIncomeSubmit={handleIncomeSubmit}
+                            total_budget={total_budget}
+                        />
                     </div>
                 </div>
-            </main>
-
-            <footer className="header mt-2">
-                <div className="nav-container">
-                    <p className="text-center footer-txt">©2025 Let me code. All rights reserved</p>
-                    <p className="text-center footer-txt">Something</p>
-                </div>
-            </footer>
-        </div>
+            </div>
+            
+        </>
     );
 }
 
