@@ -36,26 +36,29 @@ function Home() {
     //     fetchTransactionsdata();
     // }, transactions);
 
+    const possibleColors = [
+        'rgba(255, 0, 0, 0.8)',      // Pure Red
+        'rgba(0, 0, 255, 0.8)',      // Pure Blue
+        'rgba(255, 255, 0, 0.8)',    // Pure Yellow
+        'rgba(0, 255, 0, 0.8)',      // Pure Green
+        'rgba(255, 0, 255, 0.8)',    // Magenta
+        'rgba(0, 255, 255, 0.8)',    // Cyan
+        'rgba(255, 128, 0, 0.8)',    // Bright Orange
+        'rgba(128, 0, 255, 0.8)',    // Bright Purple
+        'rgba(255, 0, 128, 0.8)',    // Hot Pink
+        'rgba(0, 255, 128, 0.8)',    // Spring Green
+        // ... add more colors if needed
+    ];
+
     function makeBackgroundColors(transactionsSet) {
-        const colors = [];
-        const transactionCategories = [];
-        const transactionCategoriesArray = Array.from(transactionsSet);
-        for (let i = 0; i < transactionCategoriesArray.length; i++) {
-            const color = `rgba(${Math.floor(Math.random() * 255)}, 
-               ${Math.floor(Math.random() * 255)}, 
-                ${Math.floor(Math.random() * 255)}, 0.8)`;
-            if(color in colors) {
-                i--;
-            } else {
-                colors.push(color);
-                transactionCategories.push(transactionCategoriesArray[i]);
-            }
-        }
+        const transactionCategories = Array.from(transactionsSet);
         let dictionary = {};
-        for(let i = 0; i < colors.length; i++) {
-            dictionary[transactionCategories[i]] = colors[i];
-        }
-        console.log(dictionary);
+        
+        // Assign a color to each unique category
+        transactionCategories.forEach((category, index) => {
+            dictionary[category] = possibleColors[index];
+        });
+
         return dictionary;
     }
     // Sample data for the pie chart
@@ -69,7 +72,7 @@ function Home() {
             {
                 data: [...transactions.map(transaction => transaction.cost)],
                 backgroundColor: x,
-                borderColor: x.map(color => color.replace('0.8)', '1)')),
+                borderColor: 'rgb(255, 255, 255)',
                 borderWidth: 1,
             },
         ],
