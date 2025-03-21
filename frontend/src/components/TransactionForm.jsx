@@ -1,16 +1,40 @@
-import React from 'react';
+import { useState } from 'react';
+import api from '../api';
 
-function TransactionForm({ 
-    amount, 
-    setAmount, 
-    category, 
-    setCategory, 
-    currency, 
-    setCurrency, 
-    description, 
-    setDescription, 
-    handleSubmit 
-}) {
+function TransactionForm({ onTransactionAdded }) {
+    const [amount, setAmount] = useState("");
+    const [category, setCategory] = useState("business services");
+    const [currency, setCurrency] = useState("BGN");
+    const [description, setDescription] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await api.post("/api/transaction/", {
+                amount,
+                category,
+                currency,
+                description
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                alert("Transaction saved successfully!");
+                setAmount("");
+                setCategory("business services");
+                setCurrency("BGN");
+                setDescription("");
+                onTransactionAdded(); // Notify parent to refresh transactions
+            } else {
+                alert("Failed to save transaction.");
+                console.error("Server error:", response.data);
+            }
+        } catch (error) {
+            console.error("Error submitting the form:", error);
+            alert("An error occurred. Please try again.");
+        }
+    };
+
     return (
         <div>
             <h1>Transaction Form</h1>
@@ -75,4 +99,4 @@ function TransactionForm({
     );
 }
 
-export default TransactionForm; 
+export default TransactionForm;
