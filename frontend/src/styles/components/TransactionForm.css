@@ -1,0 +1,62 @@
+.transaction-form {
+  background-color: var(--white);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.transaction-form h1 {
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xl);
+}
+
+.transaction-form form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.transaction-form label {
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+.transaction-form input,
+.transaction-form select,
+.transaction-form textarea {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  transition: border-color var(--transition-fast);
+}
+
+.transaction-form input:focus,
+.transaction-form select:focus,
+.transaction-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.transaction-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.transaction-form button {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  margin-top: var(--spacing-md);
+  transition: background-color var(--transition-fast);
+}
+
+.transaction-form button:hover {
+  background-color: #1557b0;
+}

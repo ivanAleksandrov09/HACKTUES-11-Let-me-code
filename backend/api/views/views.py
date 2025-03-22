@@ -62,7 +62,6 @@ class TransactionStatsView(APIView):
             .values("category", "total_amount")
         )
 
-        # Format the response data
         stats = [
             {
                 "category": expense["category"],

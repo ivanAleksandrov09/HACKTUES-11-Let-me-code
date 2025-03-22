@@ -1,0 +1,31 @@
+.main-container {
+  background-color: var(--background-color);
+  min-height: 100vh;
+}
+
+.card {
+  margin-top: var(--spacing-xl);
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Login-specific link styles */
+.text-center a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.text-center a:hover {
+  color: #1557b0;
+}

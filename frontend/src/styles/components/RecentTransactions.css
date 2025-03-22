@@ -1,0 +1,32 @@
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--spacing-md);
+}
+
+.transactions-table th,
+.transactions-table td {
+  padding: var(--spacing-sm);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.transactions-table th {
+  font-weight: bold;
+  color: var(--primary-color);
+  background-color: var(--background-color);
+}
+
+.transactions-table tr:hover {
+  background-color: var(--background-color);
+}
+
+.transactions-table .income {
+  color: var(--success-color);
+}
+
+.transactions-table .expense {
+  color: var(--error-color);
+}
+
+

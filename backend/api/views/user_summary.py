@@ -74,6 +74,10 @@ class UserSummaryView(APIView):
         user_id = request.user.id
         transactions = Transaction.objects.filter(user=request.user)
 
+        # Return early if no transactions exist
+        if not transactions.exists():
+            return Response([], status=200)
+
         from_date = request.query_params.get("from-date")
         date_filter = None
 
@@ -88,11 +92,10 @@ class UserSummaryView(APIView):
                     {"error": "Invalid date format. Use YYYY-MM-DD."}, status=400
                 )
 
-        # Generate a cache key based on user_id, date filter, and transaction count/latest timestamp
         latest_transaction = transactions.order_by("-timestamp").first()
         transaction_count = transactions.count()
 
-        # Create a unique cache signature
+        # Generate a cache key based on user_id, date filter, and transaction count/latest timestamp
         cache_key = f"user_{user_id}_date_{date_filter}_count_{transaction_count}"
         if latest_transaction:
             cache_key += f"_latest_{latest_transaction.timestamp.isoformat()}"

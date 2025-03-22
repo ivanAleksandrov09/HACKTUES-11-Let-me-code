@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import TransactionList from "../components/TransactionList";
 import TransactionForm from "../components/TransactionForm";
-import "../styles/Home.css";
+import "../styles/pages/Transactions.css";
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
 
   const fetchTransactions = async () => {
     try {
-      const response = await api.get("/api/transactions/");
+      const response = await api.get("/api/transactions/", {
+        params: { ordering: "-timestamp" },
+      });
       if (response.status === 200) {
         setTransactions(response.data);
       } else {
@@ -40,15 +42,19 @@ export default function Transactions() {
   }, []);
 
   return (
-    <div className="form-container">
-      <div className="transaction-form">
-        <TransactionForm onTransactionAdded={fetchTransactions} />
-      </div>
-      <div className="transaction-list">
-        <TransactionList
-          transactions={transactions}
-          handleDelete={handleDelete}
-        />
+    <div className="transactions-page">
+      <div className="transactions-container">
+        <aside className="form-sidebar">
+          <TransactionForm onTransactionAdded={fetchTransactions} />
+        </aside>
+        <main className="transactions-main">
+          <div className="transactions-content">
+            <TransactionList
+              transactions={transactions}
+              handleDelete={handleDelete}
+            />
+          </div>
+        </main>
       </div>
     </div>
   );

@@ -4,6 +4,20 @@ import Chart from "./Chart";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({ transactions }) => {
+  if (!transactions || transactions.length === 0) {
+    return (
+      <div className="chart-container">
+        <h2 className="chart-title">Expense Overview</h2>
+        <div className="chart-wrapper">
+          <p className="text-center">
+            No expense data available yet. Add some transactions to see your
+            spending breakdown.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const possibleColors = [
     "rgba(28, 28, 72, 1)", // Muted Midnight Blue
     "rgba(41, 51, 61, 1)", // Deep Slate Gray
@@ -26,14 +40,13 @@ const PieChart = ({ transactions }) => {
     const transactionCategories = Array.from(transactionsSet);
     let dictionary = {};
 
-    // Assign a color to each unique category
     transactionCategories.forEach((category, index) => {
       dictionary[category] = possibleColors[index];
     });
 
     return dictionary;
   }
-  // Sample data for the pie chart
+
   const transactionsSet = new Set(
     transactions.map((transaction) => transaction.category)
   );

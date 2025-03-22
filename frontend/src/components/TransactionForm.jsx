@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api";
+import "../styles/components/TransactionForm.css";
 
 function TransactionForm({ onTransactionAdded }) {
   const [amount, setAmount] = useState("");
@@ -36,7 +37,7 @@ function TransactionForm({ onTransactionAdded }) {
   };
 
   return (
-    <div>
+    <div className="transaction-form">
       <h1>Transaction Form</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="amount">Amount</label>

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import api from "../api";
 import { useNavigate, Link } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
-import "../styles/Form.css";
 import "../styles/components/Form.css";
 
 function Form({ route, method }) {

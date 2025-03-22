@@ -31,6 +31,16 @@ export default function Summary() {
 
   if (error) return <div>Error loading summary</div>;
   if (!summary) return <div>Loading...</div>;
+  if (summary.length === 0)
+    return (
+      <div className="summary-container">
+        <h2 className="summary-title">Insights</h2>
+        <div className="summary-empty">
+          No insights available yet. Add some transactions to see your financial
+          insights!
+        </div>
+      </div>
+    );
 
   return (
     <div className="summary-container">

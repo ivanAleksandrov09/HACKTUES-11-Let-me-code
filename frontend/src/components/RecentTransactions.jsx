@@ -1,4 +1,4 @@
-import "./RecentTransactions.css";
+import "../styles/components/RecentTransactions.css";
 import React, { useEffect, useState } from "react";
 import api from "../api";
 
@@ -27,6 +27,16 @@ export default function RecentTransactions({ limit }) {
 
     fetchTransactions();
   }, []);
+
+  if (!LastTransactions || LastTransactions.length === 0) {
+    return (
+      <div className="transactions-wrapper">
+        <p className="text-center">
+          No transactions found. Add some transactions to see them here.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <table className="transactions-table">

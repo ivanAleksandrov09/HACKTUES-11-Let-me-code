@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../api";
 import "../styles/pages/Home.css";
-import "../styles/Home.css";
-import "../styles/new.css";
 import RecentTransactions from "../components/RecentTransactions";
 import PieChart from "../components/PieChart";
 import Summary from "../components/summary";
@@ -29,25 +27,23 @@ function Home() {
   }, []);
 
   return (
-    <>
-      <div className="nav-container">
-        <main className="main-container">
-          <div className="card">
-            <h1 className="text-center">Welcome to Your Dashboard!</h1>
-            <h2 className="text-center mt-2">Expense Overview:</h2>
-            <PDF_enter />
-            <div className="grid">
-              <PieChart transactions={transactionStats} />
-              <div className="card p-2 transactions-wrapper">
-                <h2 className="text-center">Recent Transactions</h2>
-                <RecentTransactions limit={10} />
-              </div>
+    <div className="page-container">
+      <main className="main-container">
+        <div className="dashboard-card">
+          <h1 className="text-center">Welcome to Your Dashboard!</h1>
+          <h2 className="text-center mt-2">Expense Overview:</h2>
+          <PDF_enter />
+          <div className="grid">
+            <PieChart transactions={transactionStats} />
+            <div className="transactions-wrapper">
+              <h2 className="text-center">Recent Transactions</h2>
+              <RecentTransactions limit={10} />
             </div>
           </div>
-        </main>
-      </div>
-      <Summary />
-    </>
+        </div>
+        <Summary />
+      </main>
+    </div>
   );
 }
 
