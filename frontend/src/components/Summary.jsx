@@ -1,6 +1,7 @@
 import api from "../api";
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import "../styles/components/Summary.css";
 
 const fetchSummary = () => {
   return api
@@ -32,16 +33,18 @@ export default function Summary() {
   if (!summary) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h2>Insights</h2>
-      {summary.map((insight, index) => {
-        return (
-          <div key={index} className="summary-item">
-            <h3>{insight.title}</h3>
-            <ReactMarkdown>{insight.description}</ReactMarkdown>
-          </div>
-        );
-      })}
+    <div className="summary-container">
+      <h2 className="summary-title">Insights</h2>
+      <div className="summary-grid">
+        {summary.map((insight, index) => {
+          return (
+            <div key={index} className="summary-item">
+              <h3>{insight.title}</h3>
+              <ReactMarkdown>{insight.description}</ReactMarkdown>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

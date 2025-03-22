@@ -1,75 +1,23 @@
-.form-container {
-  position: relative;
+.transaction-list {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  min-height: 100vh;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
 }
 
-.chart-container {
-  margin-top: 1rem;
-  height: fit-content;
-  align-self: stretch;
-}
-
-.transaction-form {
-  position: sticky;
-  top: 0;
+.transaction-item {
   background: white;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-  align-self: start;
-}
-
-@media (max-width: 768px) {
-  .form-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .transaction-form {
-    position: static;
-  }
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-bottom: 15px;
+  background-color: #f9f9f9;
   border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
 }
 
 .delete-btn {
@@ -81,7 +29,7 @@ button:hover {
   margin-top: 8px;
   cursor: pointer;
   width: auto;
-  margin-left: 10px; 
+  margin-left: 10px;
   margin-right: 10px;
 }
 

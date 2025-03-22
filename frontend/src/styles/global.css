@@ -18,13 +18,43 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+
+
 .card {
   background-color: var(--card-background);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 1.5rem;
-  margin: 1rem 0;
+  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
   transition: var(--transition);
+}
+
+.transaction-wrapper {
+  margin: 0;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) transparent;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.transaction-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.transaction-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transaction-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 4px;
 }
 
 .card:hover {
@@ -91,6 +121,7 @@ body {
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-rows: 50% 50%;
 }
 
 input, select, textarea {

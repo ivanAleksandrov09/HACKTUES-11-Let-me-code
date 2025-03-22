@@ -93,7 +93,9 @@ function TransactionForm({ onTransactionAdded }) {
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
 
-        <button type="submit">Submit</button>
+        <button type="submit" className="invisi-btn">
+          Submit
+        </button>
       </form>
     </div>
   );

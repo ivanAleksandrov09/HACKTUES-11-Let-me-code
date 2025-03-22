@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../api";
+import "../styles/pages/Home.css";
 import "../styles/Home.css";
 import "../styles/new.css";
 import RecentTransactions from "../components/RecentTransactions";
@@ -45,9 +46,7 @@ function Home() {
           </div>
         </main>
       </div>
-      <div className="form-container">
-        <Summary />
-      </div>
+      <Summary />
     </>
   );
 }

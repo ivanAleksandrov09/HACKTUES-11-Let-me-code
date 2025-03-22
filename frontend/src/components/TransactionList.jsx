@@ -1,3 +1,5 @@
+import "../styles/components/TransactionList.css";
+
 function TransactionList({ transactions, handleDelete }) {
   return (
     <div>

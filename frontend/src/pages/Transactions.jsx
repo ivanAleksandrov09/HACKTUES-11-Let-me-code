@@ -41,11 +41,15 @@ export default function Transactions() {
 
   return (
     <div className="form-container">
-      <TransactionForm onTransactionAdded={fetchTransactions} />
-      <TransactionList
-        transactions={transactions}
-        handleDelete={handleDelete}
-      />
+      <div className="transaction-form">
+        <TransactionForm onTransactionAdded={fetchTransactions} />
+      </div>
+      <div className="transaction-list">
+        <TransactionList
+          transactions={transactions}
+          handleDelete={handleDelete}
+        />
+      </div>
     </div>
   );
 }
