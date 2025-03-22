@@ -9,7 +9,6 @@ function Form({ route, method }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const name = method === "login" ? "Login" : "Register";
@@ -19,11 +18,10 @@ function Form({ route, method }) {
 
     // Basic validation
     if (!username.trim() || !password.trim()) {
-      setError("Please fill in all fields");
+      alert("Please fill in all fields");
       return;
     }
 
-    setError(null);
     setLoading(true);
 
     try {
@@ -36,7 +34,7 @@ function Form({ route, method }) {
         navigate("/login");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occurred");
+      alert(error);
     } finally {
       setLoading(false);
     }
@@ -79,10 +77,5 @@ function Form({ route, method }) {
     </div>
   );
 }
-
-Form.propTypes = {
-  route: PropTypes.string.isRequired,
-  method: PropTypes.oneOf(["login", "register"]).isRequired,
-};
 
 export default Form;
