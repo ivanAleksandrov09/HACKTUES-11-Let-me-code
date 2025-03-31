@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.request import Request
 from ..models import Transaction
-from .open_ai import client
+from .client import client
 import csv, io
 
 prompt = """

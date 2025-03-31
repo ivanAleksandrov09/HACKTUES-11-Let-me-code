@@ -3,25 +3,27 @@ from ..models import Transaction
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.request import Request
-from .open_ai import client
+from .client import client
 from datetime import datetime
 import csv, io, json
 from django.core.cache import cache
 
 insights_schema = {
-    "type": "object",
-    "properties": {
-        "title": {
-            "type": "string",
-            "description": "Title of the insight or pattern",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "description": "Title of the insight or pattern",
+            },
+            "description": {
+                "type": "string",
+                "description": "Detailed description of the insight or pattern",
+            },
         },
-        "description": {
-            "type": "string",
-            "description": "Detailed description of the insight or pattern",
-        },
+        "required": ["title", "description"],
     },
-    "required": ["title", "description"],
-    "additionalProperties": False,
 }
 
 prompt = """
@@ -122,34 +124,19 @@ class UserSummaryView(APIView):
             ]
         )
 
-        response = client.responses.create(
-            model="gpt-4o-mini",
-            input=[
-                {
-                    "role": "system",
-                    "content": prompt,
-                },
-                {"role": "user", "content": csvfile.getvalue()},
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                csvfile.getvalue(),
+                prompt,
             ],
-            text={
-                "format": {
-                    "type": "json_schema",
-                    "name": "insights",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "steps": {"type": "array", "items": insights_schema}
-                        },
-                        "required": ["steps"],
-                        "additionalProperties": False,
-                    },
-                    "strict": True,
-                },
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": insights_schema,
             },
-            timeout=10,
         )
 
-        summary_insights_array = json.loads(response.output_text)["steps"]
+        summary_insights_array = json.loads(response.text)
 
         cache.set(cache_key, summary_insights_array, timeout=3 * 24 * 60 * 60)
 

@@ -44,7 +44,7 @@ export default function RecentTransactions({ limit }) {
         <tr>
           <th>#</th>
           <th>Category</th>
-          <th>Amount($)</th>
+          <th>Amount</th>
           <th>Date</th>
         </tr>
       </thead>
@@ -61,7 +61,7 @@ export default function RecentTransactions({ limit }) {
               <td>
                 {new Intl.NumberFormat("en-US", {
                   style: "currency",
-                  currency: "USD",
+                  currency: transaction.currency,
                 }).format(transaction.amount)}
               </td>
               <td>{new Date(transaction.timestamp).toDateString()}</td>
