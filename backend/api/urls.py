@@ -1,6 +1,7 @@
 from django.urls import path
 from .views.pdf_import import UploadBankStatementView
 from .views.user_summary import UserSummaryView
+from .views.leaflet import LeafletView
 from .views.views import (
     TransactionListView,
     TransactionDeleteView,
@@ -20,4 +21,5 @@ urlpatterns = [
     path(
         "transaction-stats/", TransactionStatsView.as_view(), name="transaction-stats"
     ),
+    path("leaflet", LeafletView.as_view()),
 ]
