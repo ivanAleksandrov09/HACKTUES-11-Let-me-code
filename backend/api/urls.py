@@ -6,6 +6,7 @@ from .views.views import (
     TransactionListView,
     TransactionDeleteView,
     TransactionStatsView,
+    GetProfileView,
 )
 
 
@@ -22,4 +23,5 @@ urlpatterns = [
         "transaction-stats/", TransactionStatsView.as_view(), name="transaction-stats"
     ),
     path("leaflet", LeafletView.as_view()),
+    path("user/profile/", GetProfileView.as_view()),
 ]
