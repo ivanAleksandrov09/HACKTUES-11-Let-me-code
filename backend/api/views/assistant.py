@@ -57,7 +57,7 @@ prompt = """
 """
 
 
-class AssistantVeiw(APIView):
+class AssistantView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request, *args, **kwargs):
@@ -89,18 +89,12 @@ class AssistantVeiw(APIView):
             ]
         )
 
-        response = client.responses.create(
-            model="gpt-4o-mini",
-            input=[
-                {
-                    "role": "system",
-                    "content": prompt,
-                },
-                {"role": "user", "content": csvfile.getvalue()},
-                {
-                    "role": "user",
-                    "content": user_prompt,
-                },
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                prompt,
+                user_prompt,
+                csvfile.getvalue(),
             ],
         )
 

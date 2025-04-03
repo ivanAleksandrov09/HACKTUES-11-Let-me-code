@@ -51,7 +51,7 @@ class PurchasedStocksView(APIView):
                 "name": info.get("shortName", symbol),
                 "quantity": stocks.filter(ticker=symbol).first().quantity,
                 "price_per_share": info.get("currentPrice", 0),
-                # isoformat - standart format for the date
+                # isoformat - standard format for the date
                 "last_updated": datetime.now().isoformat(),
             }
 

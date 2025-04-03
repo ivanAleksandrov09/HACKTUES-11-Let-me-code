@@ -1,12 +1,16 @@
-from rest_framework.views import APIView
-from ..models import Transaction
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.request import Request
-from .client import client
+import csv
+import io
+import json
 from datetime import datetime
-import csv, io, json
+
 from django.core.cache import cache
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from ..models import Transaction
+from .client import client
 
 insights_schema = {
     "type": "array",
