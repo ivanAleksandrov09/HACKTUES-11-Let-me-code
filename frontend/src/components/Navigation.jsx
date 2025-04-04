@@ -14,6 +14,9 @@ function Navigation() {
         <li>
           <Link to="/transactions">Transactions</Link>
         </li>
+        <li>
+          <Link to="/chat">Chat</Link>
+        </li>
       </ul>
       <div>
         <Link className="btn btn-primary" to="/Login">
