@@ -6,7 +6,6 @@ function Promotions() {
     return (
         <div>
             <Deals />
-            <Footer/>
         </div>
 
     );
