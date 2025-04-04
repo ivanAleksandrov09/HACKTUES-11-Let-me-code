@@ -20,20 +20,29 @@ deals_schema = {
 
 
 # Fetch the leaflets from supported websites
-class LeafletView(APIView):
+class LeafletBaseView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
-        cache_used = False
-        request_date = datetime.today()
+        cache_files_used = False
 
-        cache_key = f"{request_date}"
+        request_date = datetime.now().date()
+        formatted_date = request_date.strftime("%Y-%m-%d")
+
+        cache_key_files = f"{formatted_date}"
         last_fetch_key = "last_fetch_timestamp"
 
         last_fetch = cache.get(last_fetch_key)
+        if last_fetch:
+            last_fetch = datetime.strptime(last_fetch, "%Y-%m-%d").date()
+        else:
+            last_fetch = None
 
         if last_fetch and (request_date - last_fetch) < timedelta(days=7):
-            cache_used = True
+            if best_deals := cache.get(f"{last_fetch}_deals"):
+                return Response({"response": best_deals}, status=200)
+
+            cache_files_used = True
             cache_key = last_fetch
             files = cache.get(cache_key)
         else:
@@ -70,11 +79,12 @@ class LeafletView(APIView):
 
                 files.append(ai_uploaded_file)
 
+        # After files are ready, we use them here
         response = client.models.generate_content(
             model="gemini-2.0-flash",
             contents=[
                 files,
-                "I want you to list the 5 best deals you find from the given leaflets. Don't explain your thought process.",
+                """Analyze the PDF leaflets and give me the 5 best deals you can find. Don't explain your thought process.""",
             ],
             config={
                 "response_mime_type": "application/json",
@@ -82,8 +92,10 @@ class LeafletView(APIView):
             },
         )
 
-        if not cache_used:
-            cache.set(last_fetch_key, request_date, timeout=14 * 24 * 60 * 60)
-            cache.set(cache_key, files, timeout=14 * 24 * 60 * 60)
+        if not cache_files_used:
+            cache.set(last_fetch_key, formatted_date, timeout=14 * 24 * 60 * 60)
+            cache.set(cache_key_files, files, timeout=14 * 24 * 60 * 60)
+
+        cache.set(f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60)
 
         return Response({"response": response.text}, status=201)

@@ -1,7 +1,9 @@
 .summary-container {
   padding: var(--spacing-xl);
+  border-radius: var(--border-radius-md);
   background-color: var(--white);
   margin-top: var(--spacing-xl);
+  min-width: 70vw;
 }
 
 .summary-title {

@@ -76,7 +76,7 @@ class UploadBankStatementView(APIView):
             contents=[
                 ai_uploaded_file,
                 "In the pdf file is provided a bank statement. Provide me with the statements as I described you. For debit transactions (money going out), represent the amount with a negative sign (e.g., -100.00).",
-                "Please extract the transactions from the bank statement and provide them in JSON format. The JSON should contain an array of transactions, each with the following fields: amount, timestamp, category, particulars, and currency. For debit transactions (payments, withdrawals, etc.), use negative amounts. For credit transactions (deposits, refunds, etc.), use positive amounts.",
+                "Please extract the transactions from the bank statement and provide them in JSON format. The JSON should contain an array of transactions, each with the following fields: amount, timestamp, category, particulars, and currency. For debit transactions (payments, withdrawals, etc.), use negative amounts. For credit transactions (deposits, refunds, etc.), use positive amounts. For timestamps, make sure to use the YYYY-MM-DD format.",
             ],
             config={
                 "response_mime_type": "application/json",

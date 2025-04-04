@@ -15,6 +15,7 @@
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
+  min-width: 70vw;
 }
 
 .grid {
