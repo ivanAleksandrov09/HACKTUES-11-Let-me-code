@@ -98,4 +98,4 @@ class AssistantView(APIView):
             ],
         )
 
-        return Response(response.output_text, status=200)
+        return Response(response.text, status=201)

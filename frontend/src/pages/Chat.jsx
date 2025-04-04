@@ -1,6 +1,8 @@
 import "../styles/pages/Chat.css"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Message from "../components/Message"
+import api from "../api";
+
 export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
@@ -8,9 +10,21 @@ export default function Chat() {
     const handleSendMessage = () => {
         if (message.trim()) {
             setMessages([...messages, { text: message, sender: 'user' }]);
+            postMessage();
             setMessage('');
         }
     };
+
+    const postMessage = async() => {
+        try {
+            const response = await api.post("/api/chat/", { prompt:message })
+            if(response.status != 201) {
+                alert("Message not send!");
+            } else setMessages((latest) => [...latest, {text:response.data, sender: 'ai'}]);
+        } catch(err) {
+            console.error("Error: ", err);
+        }
+    }
 
     return (
         <div className="chat-container">
@@ -27,6 +41,7 @@ export default function Chat() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="message-input"
+                    autoComplete="off"
                 />
                 <button id="sendButton" className="send-button" onClick={handleSendMessage}>
                     <span className="send-icon">➤</span>
