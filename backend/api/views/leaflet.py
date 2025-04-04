@@ -11,6 +11,13 @@ from rest_framework.views import APIView
 
 from .client import client
 
+deals_schema = {
+    "type": "array",
+    "items": {
+        "type": "string",
+    },
+}
+
 
 # Fetch the leaflets from supported websites
 class LeafletView(APIView):
@@ -69,6 +76,10 @@ class LeafletView(APIView):
                 files,
                 "I want you to list the 5 best deals you find from the given leaflets. Don't explain your thought process.",
             ],
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": deals_schema,
+            },
         )
 
         if not cache_used:

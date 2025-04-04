@@ -13,6 +13,15 @@ from rest_framework import filters
 from decimal import Decimal
 
 
+class GetProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # converts username from json to string
+        user = str(request.user)
+        return Response(user, status=200)
+
+
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

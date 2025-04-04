@@ -8,6 +8,7 @@ import PDF_enter from "../components/PDFEnter";
 
 function Home() {
   const [transactionStats, setTransactionStats] = useState([]);
+  const [user, setUser] = useState(null);
 
   const fetchTransactionStats = async () => {
     try {
@@ -22,16 +23,29 @@ function Home() {
     }
   };
 
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get("/api/user/profile");
+      if (response.status === 200) {
+        setUser(response.data);
+      }
+    } catch (error) {
+      console.log("Error trying to fetch user data: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchTransactionStats();
+    fetchUserData();
   }, []);
 
   return (
     <div className="page-container">
       <main className="main-container">
         <div className="dashboard-card">
-          <h1 className="text-center">Welcome to Your Dashboard!</h1>
-          <h2 className="text-center mt-2">Expense Overview:</h2>
+          <h1 className="text-center">
+            {user ? "Hello, " + user : "Welcome to Your Dashboard!"}
+          </h1>
           <PDF_enter />
           <div className="grid">
             <PieChart transactions={transactionStats} />
