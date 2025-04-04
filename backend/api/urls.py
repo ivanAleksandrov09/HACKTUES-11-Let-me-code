@@ -3,6 +3,7 @@ from .views.pdf_import import UploadBankStatementView
 from .views.user_summary import UserSummaryView
 from .views.leaflet_user import LeafletUserView
 from .views.leaflet_base import LeafletBaseView
+from .views.assistant import AssistantView
 from .views.views import (
     TransactionListView,
     TransactionDeleteView,
@@ -25,4 +26,5 @@ urlpatterns = [
     path("leaflet/user/", LeafletUserView.as_view()),
     path("leaflet/base/", LeafletBaseView.as_view()),
     path("user/profile/", GetProfileView.as_view()),
+    path("chat/", AssistantView.as_view()),
 ]
