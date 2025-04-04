@@ -1,10 +1,9 @@
 import Deals from "../components/Deals";
 function Promotions() {
     return (
-        <div>
+        <div style={{ minHeight: "90vh" }}>
             <Deals />
         </div>
-
     );
 }
 export default Promotions;
