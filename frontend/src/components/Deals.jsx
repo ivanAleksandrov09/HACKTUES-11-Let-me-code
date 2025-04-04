@@ -4,6 +4,31 @@ import kaufland from '../assets/kaufland.png';
 import lidl from '../assets/lidl.png';
 import billa from '../assets/billa.png';
 
+const StoreButton = ({ id, isActive, onClick, image }) => {
+    return (
+        <button
+            id={id}
+            className={`button ${isActive ? 'active' : ''}`}
+            onClick={onClick}
+        >
+            <img src={image} alt={id} />
+        </button>
+    );
+};
+
+const StoreItemGrid = ({ items }) => {
+    return (
+        <div className="deal-items-grid">
+            {items.map((item, index) => (
+                <div className="deal-item" key={index}>
+                    <span className="deal-name">{item.name}</span>
+                    <span className="deal-value">{item.value}</span>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 const Deals = () => {
     const [activeStore, setActiveStore] = useState('kaufland');
 
@@ -18,31 +43,28 @@ const Deals = () => {
                 <thead>
                     <tr>
                         <td>
-                            <button 
-                                id='kaufland' 
-                                className={`button ${activeStore === 'kaufland' ? 'active' : ''}`}
+                            <StoreButton
+                                id="kaufland"
+                                isActive={activeStore === 'kaufland'}
                                 onClick={() => handleClick('kaufland')}
-                            >
-                                <img src={kaufland} alt="kaufland" />
-                            </button>
+                                image={kaufland}
+                            />
                         </td>
                         <td>
-                            <button 
-                                id='lidl' 
-                                className={`button ${activeStore === 'lidl' ? 'active' : ''}`}
+                            <StoreButton
+                                id="lidl"
+                                isActive={activeStore === 'lidl'}
                                 onClick={() => handleClick('lidl')}
-                            >
-                                <img src={lidl} alt="lidl" />
-                            </button>
+                                image={lidl}
+                            />
                         </td>
                         <td>
-                            <button 
-                                id='billa' 
-                                className={`button ${activeStore === 'billa' ? 'active' : ''}`}
+                            <StoreButton
+                                id="billa"
+                                isActive={activeStore === 'billa'}
                                 onClick={() => handleClick('billa')}
-                            >
-                                <img src={billa} alt="billa" />
-                            </button>
+                                image={billa}
+                            />
                         </td>
                     </tr>
                 </thead>
@@ -50,52 +72,34 @@ const Deals = () => {
                     <tr>
                         <td colSpan="3">
                             <div className={`deals-content ${activeStore === 'kaufland' ? 'active' : ''}`}>
-                                <div className="deal-items-grid">
-                                    <div className="deal-item">
-                                        <span className="deal-name">kartofi -20%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">kartofi -20%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">kartofi -20%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">kartofi -20%</span>
-                                    </div>
-                                </div>
+                                <StoreItemGrid
+                                    items={[
+                                        { name: 'banani', value: '-20%' },
+                                        { name: 'qbylki', value: '-15%' },
+                                        { name: 'portokali', value: '-10%' },
+                                        { name: 'grozde', value: '-25%' },
+                                    ]}
+                                />
                             </div>
                             <div className={`deals-content ${activeStore === 'lidl' ? 'active' : ''}`}>
-                                <div className="deal-items-grid">
-                                    <div className="deal-item">
-                                        <span className="deal-name">hlqb -35%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">hlqb -35%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">hlqb -35%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">hlqb -35%</span>
-                                    </div>
-                                </div>
+                                <StoreItemGrid
+                                    items={[
+                                        { name: 'banani', value: '-20%' },
+                                        { name: 'qbylki', value: '-15%' },
+                                        { name: 'portokali', value: '-10%' },
+                                        { name: 'grozde', value: '-25%' },
+                                    ]}
+                                />
                             </div>
                             <div className={`deals-content ${activeStore === 'billa' ? 'active' : ''}`}>
-                                <div className="deal-items-grid">
-                                    <div className="deal-item">
-                                        <span className="deal-name">mqso -21%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">mqso -21%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">mqso -21%</span>
-                                    </div>
-                                    <div className="deal-item">
-                                        <span className="deal-name">mqso -21%</span>
-                                    </div>
-                                </div>
+                                <StoreItemGrid
+                                    items={[
+                                        { name: 'banani', value: '-20%' },
+                                        { name: 'qbylki', value: '-15%' },
+                                        { name: 'portokali', value: '-10%' },
+                                        { name: 'grozde', value: '-25%' },
+                                    ]}
+                                />
                             </div>
                         </td>
                     </tr>

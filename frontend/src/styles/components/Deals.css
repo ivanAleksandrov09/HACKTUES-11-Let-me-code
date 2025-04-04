@@ -1,5 +1,5 @@
 .deals-container {
-    max-width: 800px;
+    max-width: 575px;
     margin: 2rem auto;
     padding: 2rem;
     background: #c3cfe288;
@@ -94,10 +94,10 @@
 
 .deal-item {
     background: #f8f9fa;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     border-radius: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     transition: transform 0.2s ease;
@@ -124,6 +124,17 @@
     animation: pulse 2s infinite;
 }
 
+.deal-value {
+    background: #ff4757;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    animation: float 3s ease-in-out infinite;
+    box-shadow: 0 3px 6px rgba(255, 71, 87, 0.2);
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -136,32 +147,18 @@
     }
 }
 
-.lidl, .billa {
-    display: none;
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
 }
 
-@media (max-width: 768px) {
-    .deals-container {
-        margin: 1rem;
-        padding: 1rem;
-    }
-
-    .button {
-        width: 130px;
-        height: 130px;
-        padding: 1.2rem;
-    }
-
-    .button img {
-        width: 100px;
-        height: 100px;
-    }
-
-    .deals-container h2 {
-        font-size: 2rem;
-    }
-
-    .deal-items-grid {
-        grid-template-columns: 1fr;
-    }
+.lidl, .billa {
+    display: none;
 }
