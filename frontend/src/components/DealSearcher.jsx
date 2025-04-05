@@ -31,6 +31,10 @@ const StoreItemGrid = ({ items, variant = 'default' }) => {
     );
 };
 
+
+// export default Input;
+
+
 const Deals = () => {
 
     const [searchQuery, setSearchQuery] = useState(''); 
@@ -49,7 +53,8 @@ const Deals = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="search-input"
-                            />
+                            /> 
+                            <button className="search-button">Search</button>
                         </td>
                     </tr>
                 </thead>
