@@ -1,4 +1,5 @@
 import io
+import json
 import urllib.request
 from datetime import datetime, timedelta
 
@@ -11,10 +12,43 @@ from rest_framework.views import APIView
 
 from .client import client
 
+prompt = """Analyze the PDF leaflets carefully and extract exactly 5 deals with the highest percentage discounts. For each deal:
+1. In the 'info' field, include:
+   - The exact product name
+   - Original price in BGN
+   - Discounted price in BGN
+   Format as: '{product name} - was {original_price} BGN, now {new_price} BGN'
+
+2. In the 'discount' field:
+   - Calculate the exact percentage discount
+   - Return as a number (e.g., 50 for 50% discount)
+   - Round to nearest whole number
+
+3. Set 'supermarket' field to 'Kaufland'
+
+Focus on products with clear before/after prices and significant discounts.
+Exclude deals where the discount cannot be precisely calculated.
+Format numbers with 2 decimal places for prices.
+Sort deals by discount percentage in descending order.
+Return only the top 5 deals matching this criteria.
+"""
+
 deals_schema = {
     "type": "array",
     "items": {
-        "type": "string",
+        "type": "object",
+        "properties": {
+            "info": {
+                "type": "string",
+                "description": "Information about the deal, including item name, previous price and new price.",
+            },
+            "discount": {
+                "type": "number",
+                "description": "Discount amount in percentages such as 50%.",
+            },
+            "supermarket": {"type": "string", "description": "Name of the supermarket"},
+        },
+        "required": ["info", "discount", "supermarket"],
     },
 }
 
@@ -39,7 +73,7 @@ class LeafletBaseView(APIView):
             last_fetch = None
 
         if last_fetch and (request_date - last_fetch) < timedelta(days=7):
-            if best_deals := cache.get(f"{last_fetch}_deals"):
+            if best_deals := json.loads(cache.get(f"{last_fetch}_deals")):
                 return Response({"response": best_deals}, status=200)
 
             cache_files_used = True
@@ -84,7 +118,7 @@ class LeafletBaseView(APIView):
             model="gemini-2.0-flash",
             contents=[
                 files,
-                """Analyze the PDF leaflets and give me the 5 best deals you can find. Don't explain your thought process.""",
+                prompt,
             ],
             config={
                 "response_mime_type": "application/json",
@@ -98,4 +132,4 @@ class LeafletBaseView(APIView):
 
         cache.set(f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60)
 
-        return Response({"response": response.text}, status=201)
+        return Response({"response": json.loads(response.text)}, status=200)

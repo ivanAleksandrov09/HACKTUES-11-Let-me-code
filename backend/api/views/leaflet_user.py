@@ -1,4 +1,5 @@
 import io
+import json
 import urllib.request
 from datetime import datetime, timedelta
 
@@ -12,7 +13,7 @@ from rest_framework.request import Request
 
 from .client import client
 
-prompt = """Analyze the provided PDF leaflets and extract deal information following these strict rules:
+prompt = """Analyze the provided Kaufland PDF leaflets and extract deal information following these strict rules:
 
 1. FORMAT RULES:
    - Always return results as an array of strings
@@ -43,7 +44,19 @@ prompt = """Analyze the provided PDF leaflets and extract deal information follo
 deals_schema = {
     "type": "array",
     "items": {
-        "type": "string",
+        "type": "object",
+        "properties": {
+            "info": {
+                "type": "string",
+                "description": "Information about the deal, including item name, previous price and new discounted price.",
+            },
+            "discount": {
+                "type": "number",
+                "description": "Discount amount in percentages.",
+            },
+            "supermarket": {"type": "string", "description": "Name of the supermarket"},
+        },
+        "required": ["info", "discount", "supermarket"],
     },
 }
 
@@ -128,4 +141,4 @@ class LeafletUserView(APIView):
             cache.set(last_fetch_key, formatted_date, timeout=14 * 24 * 60 * 60)
             cache.set(cache_key, files, timeout=14 * 24 * 60 * 60)
 
-        return Response({"response": response.text}, status=201)
+        return Response({"response": json.loads(response.text)}, status=201)
