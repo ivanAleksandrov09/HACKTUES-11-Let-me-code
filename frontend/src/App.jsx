@@ -10,6 +10,7 @@ import TransactionList from "./components/TransactionList";
 import Transactions from "./pages/Transactions";
 import Footer from "./components/Footer";
 import Promotions from "./pages/Promotions";
+
 // import CreateBar from "./pages/CreateBar"
 // import BudgetForm from "./components/BudgetForm";
 // import GoalForm from "./components/GoalForm";
