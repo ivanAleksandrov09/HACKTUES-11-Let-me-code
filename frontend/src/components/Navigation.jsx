@@ -22,10 +22,10 @@ function Navigation() {
         </li>
       </ul>
       <div>
-        <Link className="btn btn-primary" to="/Login">
+        <Link className="btn-nav btn-primary" to="/Login">
           Log in
         </Link>
-        <Link className="btn btn-primary" to="/Register">
+        <Link className="btn-nav btn-primary" to="/Register">
           Sign Up
         </Link>
       </div>

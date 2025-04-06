@@ -5,6 +5,7 @@
     flex-direction: column;
     background: #f5f5f5;
     margin-bottom: 0;
+
 }
 
 .messages-container {
@@ -103,4 +104,11 @@
     .messages-container {
         max-height: calc(100vh - 400px);
     }
+}
+
+.greeting-container {
+    display: flex;
+    justify-content: center;
+    font-size: xx-large;
+    font-weight: bold;
 }

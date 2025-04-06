@@ -3,7 +3,7 @@
     min-height: 90vh;
     margin: 2rem auto;
     padding: 2rem;
-    background: #c3cfe288;
+    background: var(--background-color);
     border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
 }
@@ -158,6 +158,32 @@
     100% {
         transform: translateY(0px);
     }
+}
+
+@keyframes loading-spinner {
+    0% {
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        transform: rotate(360deg);
+        opacity: 1;
+    }
+}
+
+
+.loading-spinner {
+    border: 0.5vw solid var(--primary-color);
+    justify-content: center;
+    margin-top: 30vh;
+    align-self: center;
+    border-radius: 5px;
+    width: 5vw;
+    height: 5vw;
+    animation: loading-spinner 1.25s ease-in-out infinite;
 }
 
 .lidl, .billa {
