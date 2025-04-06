@@ -54,6 +54,32 @@ const Deals = () => {
     }
   };
 
+
+  const OfferItem = ({ name, value, store }) => {
+    const getStoreLogo = (storeName) => {
+        switch(storeName.toLowerCase()) {
+            case 'kaufland': return kaufland;
+            case 'lidl': return lidl;
+            case 'billa': return billa;
+            default: return null;
+        }
+    };
+
+    return (
+        <div className="offer-item">
+            <img 
+                src={getStoreLogo(store)} 
+                alt={`${store} logo`} 
+                className="store-logo"
+            />
+            <div className="offer-details">
+                <span className="offer-name">{name}</span>
+                <span className="offer-value">-{value}%</span>
+            </div>
+        </div>
+    );
+    };
+
   return (
     <div className="deals-container">
       <h2>Deal searcher</h2>
