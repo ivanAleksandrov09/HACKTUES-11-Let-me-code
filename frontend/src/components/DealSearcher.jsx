@@ -5,15 +5,31 @@ import lidl from "../assets/lidl.png";
 import billa from "../assets/billa.png";
 import api from "../api";
 
-const StoreButton = ({ id, isActive, onClick, image }) => {
+const OfferItem = ({ name, value, store }) => {
+  const getStoreLogo = (storeName) => {
+    switch (storeName.toLowerCase()) {
+      case "kaufland":
+        return kaufland;
+      case "lidl":
+        return lidl;
+      case "billa":
+        return billa;
+      default:
+        return null;
+    }
+  };
   return (
-    <button
-      id={id}
-      className={`button ${isActive ? "active" : ""}`}
-      onClick={onClick}
-    >
-      <img src={image} alt={id} />
-    </button>
+    <div className="offer-item">
+      <img
+        src={getStoreLogo(store)}
+        alt={`${store} logo`}
+        className="store-logo"
+      />
+      <div className="deal-item">
+        <span className="deal-name">{name}</span>
+        <span className="deal-value">-{value}%</span>
+      </div>
+    </div>
   );
 };
 
@@ -21,12 +37,12 @@ const StoreItemGrid = ({ items, variant = "default" }) => {
   return (
     <div className={`deal-items-grid ${variant}`}>
       {items.map((item, index) => (
-        <div className={`deal-item ${variant}`} key={index}>
-          <div className={`deal-content ${variant}`}>
-            <span className="deal-name">{item.info}</span>
-            <span className="deal-value">{item.discount}</span>
-          </div>
-        </div>
+        <OfferItem
+          name={item.info}
+          value={item.discount}
+          store={item.supermarket}
+          key={index}
+        />
       ))}
     </div>
   );
@@ -54,34 +70,8 @@ const Deals = () => {
     }
   };
 
-
-  const OfferItem = ({ name, value, store }) => {
-    const getStoreLogo = (storeName) => {
-        switch(storeName.toLowerCase()) {
-            case 'kaufland': return kaufland;
-            case 'lidl': return lidl;
-            case 'billa': return billa;
-            default: return null;
-        }
-    };
-
-    return (
-        <div className="offer-item">
-            <img 
-                src={getStoreLogo(store)} 
-                alt={`${store} logo`} 
-                className="store-logo"
-            />
-            <div className="offer-details">
-                <span className="offer-name">{name}</span>
-                <span className="offer-value">-{value}%</span>
-            </div>
-        </div>
-    );
-    };
-
   return (
-    <div className="deals-container">
+    <div className="deals-container-user">
       <h2>Deal searcher</h2>
       <table className="deals-table">
         <thead>
@@ -104,11 +94,6 @@ const Deals = () => {
           <tr>
             <td colSpan="3">
               <div className="best-deals">
-                <div className="images">
-                  <img src={kaufland} alt="Kaufland" className="store-logo" />
-                  <img src={lidl} alt="lidl" className="store-logo" />
-                  <img src={billa} alt="billa" className="store-logo" />
-                </div>
                 <div className="best-deals-content">
                   <StoreItemGrid items={items} />
                 </div>

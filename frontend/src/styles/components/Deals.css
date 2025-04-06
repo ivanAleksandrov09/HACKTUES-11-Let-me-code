@@ -1,5 +1,6 @@
 .deals-container {
-    max-width: 575px;
+    max-width: 30vw;
+    min-height: 90vh;
     margin: 2rem auto;
     padding: 2rem;
     background: #c3cfe288;

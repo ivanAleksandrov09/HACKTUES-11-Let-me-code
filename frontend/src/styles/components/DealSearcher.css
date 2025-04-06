@@ -1,5 +1,6 @@
-.deals-container {
-    max-width: 575px;
+.deals-container-user {
+    min-width: 40vw;
+    min-height: 90vh;
     margin: 2rem auto;
     padding: 2rem;
     background: #c3cfe288;
@@ -7,7 +8,7 @@
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
 }
 
-.deals-container h2 {
+.deals-container-user h2 {
     color: #2c3e50;
     text-align: center;
     font-size: 2.5rem;
@@ -182,10 +183,9 @@
 }
 
 .store-logo {
-    width: 100px;
-    height: auto;
+    width: 5vw;
+    height: 5vw;
     margin: 0 10px;
-    cursor: pointer;
     transition: transform 0.3s ease;
 }
 
@@ -247,4 +247,10 @@
 .search-button:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.offer-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
