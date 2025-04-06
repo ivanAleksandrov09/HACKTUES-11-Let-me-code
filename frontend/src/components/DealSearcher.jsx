@@ -95,7 +95,8 @@ const Deals = () => {
             <td colSpan="3">
               <div className="best-deals">
                 <div className="best-deals-content">
-                  <div className="loading-spinner"></div>
+                  <div className="loading-spinner spinner-fst"></div>
+                  <div className="loading-spinner spinner-scn"></div>
                   <StoreItemGrid items={items} />
                 </div>
               </div>
