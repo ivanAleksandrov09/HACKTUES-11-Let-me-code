@@ -1,0 +1,37 @@
+.transactions-page {
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.transactions-container {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: var(--spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+.form-sidebar {
+  position: sticky;
+  top: var(--spacing-lg);
+  height: fit-content;
+}
+
+.transactions-main {
+  padding: var(--spacing-lg);
+  background-color: var(--white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 1024px) {
+  .transactions-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-sidebar {
+    position: relative;
+    top: 0;
+  }
+}

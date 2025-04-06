@@ -1,7 +1,6 @@
 import io
-from openai import OpenAI
 import json
-from .open_ai import client
+from .client import client
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,43 +8,46 @@ from rest_framework.request import Request
 from ..models import Transaction
 
 
-transaction_schema = {
-    "type": "object",
-    "properties": {
-        "amount": {"type": "number", "description": "The transaction amount"},
-        "timestamp": {
-            "type": "string",
-            # RFC 3339 - standart format for date string
-            "description": "The transaction date and time RFC: 3339",
+transactions_schema = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "amount": {"type": "number", "description": "The transaction amount"},
+            "timestamp": {
+                "type": "string",
+                # RFC 3339 - standart format for date string
+                "description": "The transaction date and time RFC: 3339",
+            },
+            "category": {
+                "type": "string",
+                "enum": [
+                    "business services",
+                    "shopping",
+                    "entertainment",
+                    "groceries",
+                    "eating out",
+                    "bills",
+                    "transport",
+                    "health",
+                    "travel",
+                    "finance",
+                    "general",
+                ],
+                "description": "The transaction category",
+            },
+            "particulars": {
+                "type": "string",
+                "description": "Additional details about the transaction",
+            },
+            "currency": {
+                "type": "string",
+                "description": "Currency of the transaction (3-letter code)",
+            },
         },
-        "category": {
-            "type": "string",
-            "enum": [
-                "business services",
-                "shopping",
-                "entertainment",
-                "groceries",
-                "eating out",
-                "bills",
-                "transport",
-                "health",
-                "travel",
-                "finance",
-                "general",
-            ],
-            "description": "The transaction category",
-        },
-        "particulars": {
-            "type": "string",
-            "description": "Additional details about the transaction",
-        },
-        "currency": {
-            "type": "string",
-            "description": "Currency of the transaction (3-letter code)",
-        },
+        "required": ["amount", "timestamp", "category", "particulars", "currency"],
+        # "additionalProperties": False,
     },
-    "required": ["amount", "timestamp", "category", "particulars", "currency"],
-    "additionalProperties": False,
 }
 
 
@@ -63,44 +65,23 @@ class UploadBankStatementView(APIView):
 
         file_bytes = uploaded_file.read()
 
-        ai_uploaded_file = client.files.create(
-            file=(uploaded_file.name, io.BytesIO(file_bytes)), purpose="user_data"
+        ai_uploaded_file = client.files.upload(
+            # todo: add display name for file
+            file=(io.BytesIO(file_bytes)),
+            config={"mime_type": "application/pdf"},
         )
 
-        response = client.responses.create(
-            model="gpt-4o-mini",
-            input=[
-                {
-                    "role": "system",
-                    "content": "In the pdf file is provided a bank statement. Provide me with the statements as I described you.",
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "input_file", "file_id": ai_uploaded_file.id},
-                        {
-                            "type": "input_text",
-                            "text": "Please extract the transactions from the bank statement and provide them in JSON format. The JSON should contain an array of transactions, each with the following fields: amount, timestamp, category, particulars, and currency.",
-                        },
-                    ],
-                },
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                ai_uploaded_file,
+                "In the pdf file is provided a bank statement. Provide me with the statements as I described you. For debit transactions (money going out), represent the amount with a negative sign (e.g., -100.00).",
+                "Please extract the transactions from the bank statement and provide them in JSON format. The JSON should contain an array of transactions, each with the following fields: amount, timestamp, category, particulars, and currency. For debit transactions (payments, withdrawals, etc.), use negative amounts. For credit transactions (deposits, refunds, etc.), use positive amounts. For timestamps, make sure to use the YYYY-MM-DD format.",
             ],
-            text={
-                "format": {
-                    "type": "json_schema",
-                    "name": "transactions",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "steps": {"type": "array", "items": transaction_schema}
-                        },
-                        "required": ["steps"],
-                        "additionalProperties": False,
-                    },
-                    "strict": True,
-                },
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": transactions_schema,
             },
-            timeout=10,
         )
 
         Transaction.objects.bulk_create(
@@ -113,8 +94,8 @@ class UploadBankStatementView(APIView):
                     currency=transaction.get("currency", "USD"),
                     user=request.user,
                 )
-                for transaction in json.loads(response.output_text)["steps"]
+                for transaction in json.loads(response.text)
             ]
         )
 
-        return Response({"response": json.loads(response.output_text)})
+        return Response({"response": json.loads(response.text)}, status=201)

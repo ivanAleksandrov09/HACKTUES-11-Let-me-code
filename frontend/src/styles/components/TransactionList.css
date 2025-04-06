@@ -1,0 +1,34 @@
+.transaction-list {
+  list-style: none;
+  padding: 0;
+}
+
+.transaction-item {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  position: relative;
+}
+
+.transaction-item strong {
+  color: var(--primary-color);
+  margin-right: var(--spacing-xs);
+}
+
+.delete-btn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background-color: var(--error-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-small);
+  transition: background-color var(--transition-fast);
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}

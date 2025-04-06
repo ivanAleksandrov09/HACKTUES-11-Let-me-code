@@ -1,0 +1,53 @@
+.page-container {
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.dashboard-card {
+  background-color: var(--white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(400px, 1fr) minmax(400px, 1fr);
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+  align-items: start;
+}
+
+.transactions-wrapper {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  height: 100%;
+}
+
+.input_box {
+  display: flex;
+  justify-content: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.submit_btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  transition: background-color var(--transition-fast);
+}
+
+.submit_btn:hover {
+  background-color: #1557b0;
+}

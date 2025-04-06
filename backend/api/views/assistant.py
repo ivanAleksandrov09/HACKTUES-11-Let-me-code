@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.request import Request
 from ..models import Transaction
-from .open_ai import client
+from .client import client
 import csv, io
 
 prompt = """
@@ -57,7 +57,7 @@ prompt = """
 """
 
 
-class AssistantVeiw(APIView):
+class AssistantView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request, *args, **kwargs):
@@ -89,19 +89,13 @@ class AssistantVeiw(APIView):
             ]
         )
 
-        response = client.responses.create(
-            model="gpt-4o-mini",
-            input=[
-                {
-                    "role": "system",
-                    "content": prompt,
-                },
-                {"role": "user", "content": csvfile.getvalue()},
-                {
-                    "role": "user",
-                    "content": user_prompt,
-                },
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                prompt,
+                user_prompt,
+                csvfile.getvalue(),
             ],
         )
 
-        return Response(response.output_text, status=200)
+        return Response(response.text, status=201)
