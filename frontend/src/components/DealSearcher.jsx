@@ -3,9 +3,11 @@ import "../styles/components/DealSearcher.css";
 import kaufland from "../assets/kaufland.png";
 import lidl from "../assets/lidl.png";
 import billa from "../assets/billa.png";
+import cross from "../assets/cross.png";
 import api from "../api";
 
 const OfferItem = ({ name, value, store }) => {
+  let isPromptValid = true;
   const getStoreLogo = (storeName) => {
     switch (storeName.toLowerCase()) {
       case "kaufland":
@@ -14,6 +16,9 @@ const OfferItem = ({ name, value, store }) => {
         return lidl;
       case "billa":
         return billa;
+      case "x":
+        isPromptValid = false;
+        return cross;
       default:
         return null;
     }
@@ -27,7 +32,7 @@ const OfferItem = ({ name, value, store }) => {
       />
       <div className="deal-item">
         <span className="deal-name">{name}</span>
-        <span className="deal-value">-{value}%</span>
+        {isPromptValid && <span className="deal-value">-{value}%</span>}
       </div>
     </div>
   );
@@ -53,20 +58,26 @@ const StoreItemGrid = ({ items, variant = "default" }) => {
 const Deals = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const sendQuery = async () => {
+    setIsLoading(true);
     try {
       const response = await api.post("/api/leaflet/user/", {
         prompt: searchQuery,
       });
       if (response.status === 201) {
-        console.log(response.data.response);
         setItems(response.data.response);
+      } else if (response.status === 401) {
+        alert("Page will be refreshed for relogging purposes.");
+        location.reload();
       } else {
         alert("Failed to find user requested deals.");
       }
     } catch (error) {
       console.log("Error when fetching user deals: ", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,8 +106,8 @@ const Deals = () => {
             <td colSpan="3">
               <div className="best-deals">
                 <div className="best-deals-content">
-                  <div className="loading-spinner"></div>
-                  <StoreItemGrid items={items} />
+                  {isLoading && <div className="loading-spinner"></div>}
+                  {!isLoading && <StoreItemGrid items={items} />}
                 </div>
               </div>
             </td>

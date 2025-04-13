@@ -6,8 +6,10 @@ import api from "../api";
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [isEmpty, setIsEmpty] = useState(true);
 
   const handleSendMessage = () => {
+    setIsEmpty(false);
     if (message.trim()) {
       setMessages([...messages, { text: message, sender: "user" }]);
       postMessage();
@@ -33,6 +35,11 @@ export default function Chat() {
   return (
     <div className="chat-container">
       <div className="messages-container">
+        {isEmpty && (
+          <div className="greeting-container">
+            <p>Welcome to your personalized financial chat!</p>
+          </div>
+        )}
         {messages.map((message, index) => (
           <Message key={index} text={message.text} sender={message.sender} />
         ))}

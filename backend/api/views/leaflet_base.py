@@ -9,7 +9,6 @@ from django.core.cache import cache
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .client import client
 
 prompt = """Analyze the PDF leaflets carefully and extract exactly 5 deals with the highest percentage discounts. For each deal:
@@ -104,14 +103,19 @@ class LeafletBaseView(APIView):
             files = []
             for current_url in urls:
                 # download the pdf leaflet
-                file_bytes = urllib.request.urlopen(current_url).read()
+                downloaded_pdf = requests.get(current_url, timeout=120)
+                downloaded_pdf.raise_for_status()
+                file_bytes = downloaded_pdf.content
 
-                ai_uploaded_file = client.files.upload(
-                    file=(io.BytesIO(file_bytes)),
-                    config={"mime_type": "application/pdf"},
-                )
-
-                files.append(ai_uploaded_file)
+                try:
+                    ai_uploaded_file = client.files.upload(
+                        file=(io.BytesIO(file_bytes)),
+                        config={"mime_type": "application/pdf"},
+                    )
+                    files.append(ai_uploaded_file)
+                except Exception as e:
+                    print(f"Error uploading file to client: {e}")
+                    continue
 
         # After files are ready, we use them here
         response = client.models.generate_content(

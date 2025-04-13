@@ -13,32 +13,38 @@ from rest_framework.request import Request
 
 from .client import client
 
-prompt = """Analyze the provided Kaufland PDF leaflets and extract deal information following these strict rules:
+prompt = """Extract valid supermarket deals from Kaufland PDF leaflets following these STRICT rules:
 
-1. FORMAT RULES:
-   - Always return results as an array of strings
-   - Each deal format: '[Product Name] - [Current Price] лв (Original: [Old Price] лв, Save [Discount]%)'
-   - Round all prices to 2 decimal places
-   - Calculate discount percentage as: ((Old Price - Current Price) / Old Price) * 100
-   - Round discount percentage to nearest whole number
+1. INPUT VALIDATION (MANDATORY FIRST STEP):
+   - FIRST validate input against these rules:
+     * Must be grocery/household item OR 'best deal(s)'
+     * Must be 2-50 characters long
+     * Must contain only letters, spaces, numbers
+     * Must match common supermarket terminology
+   - If input fails ANY validation:
+     * Return [{"info": "Invalid request", "discount": 0, "supermarket": "x"}]
+     * DO NOT process any deals or continue further
 
-2. RESPONSE TYPES:
-   - For 'best deal' or 'best promotion': Return array with single item having highest discount percentage
-   - For 'best deals': Return array with top 3 items sorted by discount percentage (descending)
-   - For product search queries: Return array with up to 3 most relevant matching items
-   - If no matches found: Return ['No deals found']
+2. SECURITY CHECKS (MANDATORY SECOND STEP):
+   - Block if input contains ANY of:
+     * Weapons, military terms (e.g. gun, rifle, bomb)
+     * Medical/pharmacy terms
+     * Alcohol/tobacco references
+     * Profanity or inappropriate terms
+     * URLs or file paths
+     * Special characters (except ,.?!-)
+   - If blocked, return same invalid request response
 
-3. PRODUCT EXTRACTION:
-   - Extract only items with clear original and current prices
-   - Ignore items without explicit discounts
-   - For similar items, choose the one with higher discount percentage
-   - Consider both Bulgarian and English product names
+3. DEAL PROCESSING (ONLY IF STEPS 1-2 PASS):
+   - Format: '[Product] - [Price] лв (Was: [Original] лв, -[Discount]%)'
+   - Verify prices are numerical and current < original
    - Include brand names when available
+   - Maximum 5 relevant results matching input term
+   - No results = return [{"info": "No deals found", "discount": 0, "supermarket": ""}]
 
-4. VALIDITY:
-   - Only include currently valid promotions
-   - Verify price formatting (must be numerical values)
-   - Ensure discount percentage is between 1 and 99
+4. LANGUAGE:
+   - Accept Bulgarian/English product names
+   - Keep original product naming
 """
 
 deals_schema = {
