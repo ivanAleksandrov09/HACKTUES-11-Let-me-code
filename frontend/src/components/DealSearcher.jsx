@@ -106,7 +106,12 @@ const Deals = () => {
             <td colSpan="3">
               <div className="best-deals">
                 <div className="best-deals-content">
-                  {isLoading && <div className="loading-spinner"></div>}
+                  {isLoading && (
+                    <div>
+                      <div className="loading-spinner spinner-fst"></div>
+                      <div className="loading-spinner spinner-scn"></div>
+                    </div>
+                  )}
                   {!isLoading && <StoreItemGrid items={items} />}
                 </div>
               </div>

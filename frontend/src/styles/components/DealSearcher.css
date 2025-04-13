@@ -163,14 +163,9 @@
 @keyframes loading-spinner {
     0% {
         transform: rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.75;
     }
     100% {
         transform: rotate(360deg);
-        opacity: 1;
     }
 }
 
@@ -184,6 +179,15 @@
     width: 5vw;
     height: 5vw;
     animation: loading-spinner 1.25s ease-in-out infinite;
+}
+
+.spinner-scn{
+    position: relative;
+    animation-delay:0.04s;
+    border: 0.5vw solid var(--primary-color);
+    opacity: 0.5;
+    margin-top: 0;
+    top:-5vw;
 }
 
 .lidl, .billa {
