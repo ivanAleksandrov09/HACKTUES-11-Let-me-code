@@ -1,8 +1,9 @@
 from django.urls import path
 from .views.pdf_import import UploadBankStatementView
 from .views.user_summary import UserSummaryView
+from .views.leaflet_lidl import LidlLeafletView
 from .views.leaflet_user import LeafletUserView
-from .views.leaflet_base import LeafletBaseView
+from .views.leaflet_kaufland import LeafletKauflandView
 from .views.assistant import AssistantView
 from .views.views import (
     TransactionListView,
@@ -23,8 +24,9 @@ urlpatterns = [
     path(
         "transaction-stats/", TransactionStatsView.as_view(), name="transaction-stats"
     ),
+    path("leaflet/lidl", LidlLeafletView.as_view()),
+    path("leaflet/kaufland/", LeafletKauflandView.as_view()),
     path("leaflet/user/", LeafletUserView.as_view()),
-    path("leaflet/base/", LeafletBaseView.as_view()),
     path("user/profile/", GetProfileView.as_view()),
     path("chat/", AssistantView.as_view()),
 ]

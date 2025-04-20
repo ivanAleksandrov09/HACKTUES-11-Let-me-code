@@ -1,0 +1,197 @@
+import io
+import json
+from datetime import datetime, timedelta
+
+import requests
+import requests.adapters
+from bs4 import BeautifulSoup
+from django.core.cache import cache
+from PyPDF2 import PdfReader, PdfWriter
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .client import client
+
+PDF_CHUNKS = 2
+
+leaflet_info_schema = {
+    "type": "array",
+    "items": {
+        "type": "string",
+    },
+}
+
+prompt = """Analyze the PDF leaflets carefully and extract exactly 5 deals with the highest percentage discounts. For each deal:
+1. In the 'info' field, include:
+   - The exact product name
+   - Original price in BGN
+   - Discounted price in BGN
+   Format as: '{product name} - was {original_price} BGN, now {new_price} BGN'
+
+2. In the 'discount' field:
+   - Calculate the exact percentage discount
+   - Return as a number (e.g., 50 for 50% discount)
+   - Round to nearest whole number
+
+3. Set 'supermarket' field to 'lidl'
+
+Focus on products with clear before/after prices and significant discounts.
+Exclude deals where the discount cannot be precisely calculated.
+Format numbers with 2 decimal places for prices.
+Sort deals by discount percentage in descending order.
+Return only the top 5 deals matching this criteria.
+"""
+
+deals_schema = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "info": {
+                "type": "string",
+                "description": "Information about the deal, including item name, previous price and new price.",
+            },
+            "discount": {
+                "type": "number",
+                "description": "Discount amount in percentages such as 50%.",
+            },
+            "supermarket": {"type": "string", "description": "Name of the supermarket"},
+        },
+        "required": ["info", "discount", "supermarket"],
+    },
+}
+
+
+def get_leaflet_page_info(url):
+    try:
+        page = requests.get(url)
+    except:
+        raise Exception("Couldn't access LIDL home page.")
+    soup = str(BeautifulSoup(page.text, "html.parser"))
+
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[
+            soup,
+            """In the attached html script you can see the webpage of a supermarket. 
+            I need you to find the URLs for the weekly leaflets, from which I want you to
+            extract the leaflet IDs from the URLs (likely in the date format 00-00-00-00)
+            Return an array of IDs.
+            Don't format the response or explain your thought process.""",
+        ],
+        config={
+            "response_mime_type": "application/json",
+            "response_schema": leaflet_info_schema,
+        },
+    )
+
+    return json.loads(response.text)
+
+
+class LidlLeafletView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        cache_files_used = False
+
+        request_date = datetime.now().date()
+        formatted_date = request_date.strftime("%Y-%m-%d")
+
+        cache_key_files = f"{formatted_date}_lidl"
+        last_fetch_key = "last_fetch_timestamp_lidl"
+
+        last_fetch = cache.get(last_fetch_key)
+        if last_fetch:
+            last_fetch = datetime.strptime(last_fetch, "%Y-%m-%d").date()
+        else:
+            last_fetch = None
+
+        # Check whether enough time has passed before refetching best deals and leaflets (1 week)
+        if last_fetch and (request_date - last_fetch) < timedelta(days=7):
+
+            # If there is no need to refetch anything
+            if best_deals := json.loads(cache.get(f"{last_fetch}_lidl_deals")):
+                return Response({"response": best_deals}, status=200)
+
+            cache_files_used = True
+            cache_key = last_fetch
+            files = cache.get(cache_key)
+        else:
+            # Try to find the unique url for the leaflet
+            url = "https://www.lidl.bg/c/broshura/s10020060"
+
+            leaflet_ids = get_leaflet_page_info(url)
+
+            files = []
+            for leaflet_id in leaflet_ids:
+                # We construct the URL for the initial leaflet request to LIDLs endpoint
+                # and then fetch the PDF URL for the leaflet
+                # before downloading it
+
+                constructed_url = f"https://endpoints.leaflets.schwarz/v4/flyer?flyer_identifier={leaflet_id}&region_id=0&region_code=0"
+                try:
+                    response = requests.get(constructed_url)
+                except:
+                    print("Couldn't construct leaflet PDF url.\n")
+                    continue
+
+                pdf_url = response.json()["flyer"]["pdfUrl"]
+
+                # download the pdf leaflet
+                downloaded_pdf = requests.get(pdf_url, timeout=120)
+                downloaded_pdf.raise_for_status()
+                file_bytes = downloaded_pdf.content
+
+                # split the pdf into chunks and upload it
+                try:
+                    pdf_reader = PdfReader(io.BytesIO(file_bytes))
+                    total_pages = len(pdf_reader.pages)
+                    chunk = total_pages // PDF_CHUNKS
+
+                    for part in range(PDF_CHUNKS):
+                        pdf_writer = PdfWriter()
+                        start_page = part * chunk
+                        end_page = min((part + 1) * chunk, total_pages)
+
+                        if start_page >= total_pages:
+                            break
+
+                        for page_num in range(start_page, end_page):
+                            pdf_writer.add_page(pdf_reader.pages[page_num])
+
+                        output_bytes = io.BytesIO()
+                        pdf_writer.write(output_bytes)
+                        # seek - sets the stream position to beginning
+                        output_bytes.seek(0)
+
+                        ai_uploaded_file = client.files.upload(
+                            file=output_bytes,
+                            config={"mime_type": "application/pdf"},
+                        )
+                        files.append(ai_uploaded_file)
+
+                except Exception as e:
+                    print(f"Error processing/uploading file: {e}")
+                    continue
+
+        # After downloading PDFs, we analyze them here
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                files,
+                prompt,
+            ],
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": deals_schema,
+            },
+        )
+
+        if not cache_files_used:
+            cache.set(last_fetch_key, formatted_date, timeout=14 * 24 * 60 * 60)
+            cache.set(cache_key_files, files, timeout=14 * 24 * 60 * 60)
+
+        cache.set(f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60)
+
+        return Response({"response": json.loads(response.text)}, status=200)

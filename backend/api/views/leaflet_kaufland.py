@@ -53,7 +53,7 @@ deals_schema = {
 
 
 # Fetch the leaflets from supported websites
-class LeafletBaseView(APIView):
+class LeafletKauflandView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
@@ -62,8 +62,8 @@ class LeafletBaseView(APIView):
         request_date = datetime.now().date()
         formatted_date = request_date.strftime("%Y-%m-%d")
 
-        cache_key_files = f"{formatted_date}"
-        last_fetch_key = "last_fetch_timestamp"
+        cache_key_files = f"{formatted_date}_kaufland"
+        last_fetch_key = "last_fetch_timestamp_kaufland"
 
         last_fetch = cache.get(last_fetch_key)
         if last_fetch:
@@ -71,8 +71,11 @@ class LeafletBaseView(APIView):
         else:
             last_fetch = None
 
+        # Check whether enough time has passed before refetching best deals and leaflets (1 week)
         if last_fetch and (request_date - last_fetch) < timedelta(days=7):
-            if best_deals := json.loads(cache.get(f"{last_fetch}_deals")):
+
+            # If there is no need to refetch anything
+            if best_deals := json.loads(cache.get(f"{last_fetch}_kaufland_deals")):
                 return Response({"response": best_deals}, status=200)
 
             cache_files_used = True

@@ -36,11 +36,12 @@ prompt = """Extract valid supermarket deals from Kaufland PDF leaflets following
    - If blocked, return same invalid request response
 
 3. DEAL PROCESSING (ONLY IF STEPS 1-2 PASS):
-   - Format: '[Product] - [Price] лв (Was: [Original] лв, -[Discount]%)'
+   - Never include deals with unclear pricing
+   - Format: '[Product] - [Price] лв (Was: [Original] лв)'
    - Verify prices are numerical and current < original
    - Include brand names when available
    - Maximum 5 relevant results matching input term
-   - No results = return [{"info": "No deals found", "discount": 0, "supermarket": ""}]
+   - No results = return [{"info": "No deals found", "discount": 0, "supermarket": "kaufland"}]
 
 4. LANGUAGE:
    - Accept Bulgarian/English product names
