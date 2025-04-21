@@ -118,14 +118,14 @@ const Deals = ({ isFetched }) => {
             </td>
           </tr>
         </thead>
+        {isLoading && (
+          <div className="spinner-container">
+            <div className="loading-spinner spinner-fst"></div>
+            <div className="loading-spinner spinner-scn"></div>
+          </div>
+        )}
         <tbody>
           <tr>
-            {isLoading && (
-              <div className="spinner-container">
-                <div className="loading-spinner spinner-fst"></div>
-                <div className="loading-spinner spinner-scn"></div>
-              </div>
-            )}
             {!isLoading && (
               <td colSpan="3">
                 <div

@@ -22,25 +22,43 @@ leaflet_info_schema = {
     },
 }
 
-prompt = """Analyze the PDF leaflets carefully and extract exactly 5 deals with the highest percentage discounts. For each deal:
-1. In the 'info' field, include:
-   - The exact product name
-   - Original price in BGN
-   - Discounted price in BGN
-   Format as: '{product name} - was {original_price} BGN, now {new_price} BGN'
+prompt = """Extract supermarket deals from PDF leaflets following these strict validation rules:
 
-2. In the 'discount' field:
-   - Calculate the exact percentage discount
-   - Return as a number (e.g., 50 for 50% discount)
-   - Round to nearest whole number
+1. INPUT VALIDATION:
+   - Validate input contains:
+     * Common grocery/household items
+     * 2-50 characters length
+     * Letters, spaces, numbers
+   - If invalid, return [{"info": "Invalid request", "discount": 0, "supermarket": "x"}]
 
-3. Set 'supermarket' field to 'lidl'
+2. DEAL PROCESSING:
+   - Search for products containing the input term (case-insensitive)
+   - STRICT VALIDATION REQUIREMENTS:
+     * MUST have clear, unambiguous current price
+     * MUST have clear, unambiguous original price
+     * MUST include complete product name with brand and variety when available
+     * MUST be able to verify both prices are for the same product/quantity
+     * MUST verify source leaflet before assigning supermarket name
+   - Format: '[Full Product Name with Details] - [Current Price] лв (Was: [Original Price] лв)'
+   - Include brand names and product specifics in the name when available
+   - Include package size/weight when available
+   - For supermarket field:
+     * Use 'kaufland' ONLY for deals found in Kaufland leaflets
+     * Use 'lidl' ONLY for deals found in Lidl leaflets
+     * Verify leaflet source before assigning supermarket name
+   - Calculate discount percentage: (original_price - current_price) / original_price * 100
+   - Sort by discount percentage (highest first)
+   - Maximum 10 results with highest discounts
+   - Minimum discount threshold: 15%
+   - REJECT ANY PRODUCT IF:
+     * Any price is unclear or ambiguous
+     * Cannot verify price comparison validity
+     * Cannot verify supermarket source
+     * Product description is incomplete
 
-Focus on products with clear before/after prices and significant discounts.
-Exclude deals where the discount cannot be precisely calculated.
-Format numbers with 2 decimal places for prices.
-Sort deals by discount percentage in descending order.
-Return only the top 5 deals matching this criteria.
+3. LANGUAGE:
+   - Accept both Bulgarian and English product names
+   - Use original product naming from leaflet
 """
 
 deals_schema = {
@@ -137,6 +155,7 @@ class LidlLeafletView(APIView):
                     continue
 
                 pdf_url = response.json()["flyer"]["pdfUrl"]
+                print(f"Found LIDL PDF leaflet: {pdf_url}")
 
                 # download the pdf leaflet
                 try:

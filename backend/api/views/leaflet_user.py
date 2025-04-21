@@ -13,29 +13,54 @@ from rest_framework.request import Request
 
 from .client import client
 
-prompt = """Extract supermarket deals from PDF leaflets following these rules:
+prompt = """Extract supermarket deals from Kaufland and LIDL PDF leaflets following these strict validation rules:
 
 1. INPUT VALIDATION:
    - Validate input contains:
      * Common grocery/household items
      * 2-50 characters length
      * Letters, spaces, numbers
+   - Search for both exact and partial matches
+   - Consider product categories and variations
    - If invalid, return [{"info": "Invalid request", "discount": 0, "supermarket": "x"}]
 
 2. DEAL PROCESSING:
+   - CRITICAL: Maintain strict separation between Kaufland and LIDL leaflets
+   - Track and verify source supermarket for EACH deal
+   - Double-check supermarket source before labeling any deal
+   - NEVER mix deals between supermarkets
    - Search for products containing the input term (case-insensitive)
-   - Format: '[Product Name] - [Current Price] лв (Was: [Original Price] лв)'
-   - Include the supermarket name you got the deal from to the "supermarket" property (lidl or kaufland)
-   - Include any products that:
-     * Match the search term partially or fully
-     * Have a clear current and original price
-   - Maximum 10 relevant results
-   - Never return a product if unsure about it's name
+   - Use fuzzy matching to catch similar product names and variations
+   - Include category-related items (e.g., "milk" should match "whole milk", "skim milk", etc.)
+   - STRICT VALIDATION REQUIREMENTS:
+     * MUST have clear, unambiguous current price
+     * MUST have clear, unambiguous original price
+     * MUST include complete product name with brand and variety when available
+     * MUST be able to verify both prices are for the same product/quantity
+     * MUST correctly identify and label the source supermarket (Kaufland or LIDL)
+   - Format: '[Full Product Name with Details] - [Current Price] лв (Was: [Original Price] лв)'
+   - Include brand names and product specifics in the name when available
+   - Include package size/weight when available
+   - Supermarket property MUST match the actual leaflet source (lidl or kaufland)
+   - Calculate discount percentage: (original_price - current_price) / original_price * 100
+   - Sort results by:
+     1. Match relevance (exact matches first)
+     2. Discount percentage (highest first)
+   - Maximum 10 results with highest relevance and discounts
+   - Minimum discount threshold: 10%
+   - REJECT ANY PRODUCT IF:
+     * Any price is unclear or ambiguous
+     * Cannot verify price comparison validity
+     * Product description is incomplete or ambiguous
+     * Cannot determine product specifics
+     * Cannot verify supermarket source with 100% certainty
    - No results = return [{"info": "No deals found", "discount": 0, "supermarket": ""}]
 
 3. LANGUAGE:
    - Accept both Bulgarian and English product names
    - Use original product naming from leaflet
+   - Include both Bulgarian and English names when available
+   - Handle common spelling variations and transliterations
 """
 
 deals_schema = {
@@ -82,13 +107,18 @@ class LeafletUserView(APIView):
             model="gemini-2.0-flash-lite",
             contents=[
                 prompt,
+                "Any deals from here should be labelled as Kaufland: ",
                 kaufland_files,
+                "Any deals from here should be labelled as Lidl: ",
                 lidl_files,
                 user_prompt,
             ],
             config={
                 "response_mime_type": "application/json",
                 "response_schema": deals_schema,
+                "temperature": 0.3,
+                "top_p": 0.8,
+                "top_k": 40,
             },
         )
 
