@@ -71,6 +71,7 @@ class LeafletKauflandView(APIView):
         else:
             last_fetch = None
 
+        files = []
         # Check whether enough time has passed before refetching best deals and leaflets (1 week)
         if last_fetch and (request_date - last_fetch) < timedelta(days=7):
 
@@ -80,7 +81,7 @@ class LeafletKauflandView(APIView):
 
             cache_files_used = True
             cache_key = last_fetch
-            files = cache.get(cache_key)
+            files = cache.get(f"{cache_key}_kaufland")
         else:
             url = "https://www.kaufland.bg/broshuri.html"
             try:
@@ -103,7 +104,6 @@ class LeafletKauflandView(APIView):
             # remove newlines added from split method
             urls = [url.strip() for url in urls]
 
-            files = []
             for current_url in urls:
                 # download the pdf leaflet
                 downloaded_pdf = requests.get(current_url, timeout=120)
@@ -137,6 +137,15 @@ class LeafletKauflandView(APIView):
             cache.set(last_fetch_key, formatted_date, timeout=14 * 24 * 60 * 60)
             cache.set(cache_key_files, files, timeout=14 * 24 * 60 * 60)
 
-        cache.set(f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60)
-
-        return Response({"response": json.loads(response.text)}, status=200)
+        try:
+            parsed_response = json.loads(response.text)
+            cache.set(
+                f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60
+            )
+            return Response({"response": parsed_response}, status=200)
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {str(e)}")
+            print(f"Response text: {response.text}")
+            return Response(
+                {"error": "Invalid JSON response from AI model"}, status=500
+            )

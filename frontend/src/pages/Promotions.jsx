@@ -9,13 +9,25 @@ function Promotions() {
   return (
     <div className="promotions-container fade-in">
       <div style={{ minHeight: "90vh" }}>
-        <Suspense fallback={<div id='loadingDeals'>Loading...</div>}>
-          <Deals isFetched={() => setDealsFetched(true)}/>
+        <Suspense
+          fallback={
+            <div>
+              <div className="loading-spinner spinner-fst"></div>
+              <div className="loading-spinner spinner-scn"></div>
+            </div>
+          }
+        >
+          <Deals isFetched={() => setDealsFetched(true)} />
         </Suspense>
       </div>
       <div style={{ minHeight: "90vh" }}>
         {dealsFetched && <DealSearcher />}
-        {!dealsFetched && <div id='loadingSearcher'>Loading...</div>}
+        {!dealsFetched && (
+          <div>
+            <div className="loading-spinner spinner-fst"></div>
+            <div className="loading-spinner spinner-scn"></div>
+          </div>
+        )}
       </div>
     </div>
   );

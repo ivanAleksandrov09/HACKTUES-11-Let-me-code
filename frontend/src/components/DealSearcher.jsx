@@ -20,7 +20,8 @@ const OfferItem = ({ name, value, store }) => {
         isPromptValid = false;
         return cross;
       default:
-        return null;
+        isPromptValid = false;
+        return cross;
     }
   };
   return (

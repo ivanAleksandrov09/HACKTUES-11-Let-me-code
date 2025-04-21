@@ -161,6 +161,45 @@
     }
 }
 
+@keyframes loading-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60vh;
+}
+
+
+.loading-spinner {
+    border: 0.5vw solid var(--primary-color);
+    justify-content: center;
+    margin-top: 30vh;
+    align-self: center;
+    border-radius: 5px;
+    width: 5vw;
+    height: 5vw;
+    animation: loading-spinner 1.25s ease-in-out infinite;
+}
+
+.spinner-scn{
+    position: relative;
+    animation-delay:0.04s;
+    border: 0.5vw solid var(--primary-color);
+    opacity: 0.5;
+    margin-top: 0;
+    top:-5vw;
+}
+
 .lidl, .billa {
     display: none;
 }

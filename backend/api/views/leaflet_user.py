@@ -13,39 +13,29 @@ from rest_framework.request import Request
 
 from .client import client
 
-prompt = """Extract valid supermarket deals from Kaufland PDF leaflets following these STRICT rules:
+prompt = """Extract supermarket deals from PDF leaflets following these rules:
 
-1. INPUT VALIDATION (MANDATORY FIRST STEP):
-   - FIRST validate input against these rules:
-     * Must be grocery/household item OR 'best deal(s)'
-     * Must be 2-50 characters long
-     * Must contain only letters, spaces, numbers
-     * Must match common supermarket terminology
-   - If input fails ANY validation:
-     * Return [{"info": "Invalid request", "discount": 0, "supermarket": "x"}]
-     * DO NOT process any deals or continue further
+1. INPUT VALIDATION:
+   - Validate input contains:
+     * Common grocery/household items
+     * 2-50 characters length
+     * Letters, spaces, numbers
+   - If invalid, return [{"info": "Invalid request", "discount": 0, "supermarket": "x"}]
 
-2. SECURITY CHECKS (MANDATORY SECOND STEP):
-   - Block if input contains ANY of:
-     * Weapons, military terms (e.g. gun, rifle, bomb)
-     * Medical/pharmacy terms
-     * Alcohol/tobacco references
-     * Profanity or inappropriate terms
-     * URLs or file paths
-     * Special characters (except ,.?!-)
-   - If blocked, return same invalid request response
+2. DEAL PROCESSING:
+   - Search for products containing the input term (case-insensitive)
+   - Format: '[Product Name] - [Current Price] лв (Was: [Original Price] лв)'
+   - Include the supermarket name you got the deal from to the "supermarket" property (lidl or kaufland)
+   - Include any products that:
+     * Match the search term partially or fully
+     * Have a clear current and original price
+   - Maximum 10 relevant results
+   - Never return a product if unsure about it's name
+   - No results = return [{"info": "No deals found", "discount": 0, "supermarket": ""}]
 
-3. DEAL PROCESSING (ONLY IF STEPS 1-2 PASS):
-   - Never include deals with unclear pricing
-   - Format: '[Product] - [Price] лв (Was: [Original] лв)'
-   - Verify prices are numerical and current < original
-   - Include brand names when available
-   - Maximum 5 relevant results matching input term
-   - No results = return [{"info": "No deals found", "discount": 0, "supermarket": "kaufland"}]
-
-4. LANGUAGE:
-   - Accept Bulgarian/English product names
-   - Keep original product naming
+3. LANGUAGE:
+   - Accept both Bulgarian and English product names
+   - Use original product naming from leaflet
 """
 
 deals_schema = {
@@ -75,67 +65,25 @@ class LeafletUserView(APIView):
     def post(self, request: Request, *args, **kwargs):
         user_prompt = request.data.get("prompt")
 
-        cache_used = False
-        request_date = datetime.now().date()
-        formatted_date = request_date.strftime("%Y-%m-%d")
+        kaufland_fetch_date = cache.get("last_fetch_timestamp_kaufland")
+        lidl_fetch_date = cache.get("last_fetch_timestamp_lidl")
 
-        cache_key = f"{formatted_date}"
-        last_fetch_key = "last_fetch_timestamp"
+        kaufland_files = cache.get(f"{kaufland_fetch_date}_kaufland")
+        lidl_files = cache.get(f"{lidl_fetch_date}_lidl")
 
-        last_fetch = cache.get(last_fetch_key)
-        if last_fetch:
-            last_fetch = datetime.strptime(last_fetch, "%Y-%m-%d").date()
-        else:
-            last_fetch = None
+        if not kaufland_files or not lidl_files:
+            return Response({"error": "Leaflet files not available"}, status=400)
 
-        if last_fetch and (request_date - last_fetch) < timedelta(days=7):
-            cache_used = True
-            cache_key = last_fetch
-            files = cache.get(cache_key)
-        else:
-            url = "https://www.kaufland.bg/broshuri.html"
-            try:
-                page = requests.get(url)
-            except:
-                raise Exception("Couldn't access kaufland download page.")
+        if not user_prompt:
+            return Response({"error": "Search prompt is required"}, status=400)
 
-            soup = str(BeautifulSoup(page.text, "html.parser"))
-
-            returned_urls = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=[
-                    soup,
-                    "In the attached html script you can access the leaflets webpage of a supermarket. I need you to extract the download urls for each pdf leaflet from it. Please don't explain your thought process and provide only the urls separated by commas.",
-                ],
-            )
-
-            urls = returned_urls.text.split(",")
-
-            # remove newlines added from split method
-            urls = [url.strip() for url in urls]
-
-            files = []
-            for current_url in urls:
-                try:
-                    # download the pdf leaflet
-                    file_bytes = urllib.request.urlopen(current_url).read()
-
-                    ai_uploaded_file = client.files.upload(
-                        file=(io.BytesIO(file_bytes)),
-                        config={"mime_type": "application/pdf"},
-                    )
-
-                    files.append(ai_uploaded_file)
-                except (urllib.error.URLError, urllib.error.HTTPError) as e:
-                    print(f"Skipping invalid URL {current_url}: {str(e)}")
-                    continue
-
-        # After files are ready, we use them here
+        # Use the fresh uploads
         response = client.models.generate_content(
             model="gemini-2.0-flash-lite",
             contents=[
-                files,
                 prompt,
+                kaufland_files,
+                lidl_files,
                 user_prompt,
             ],
             config={
@@ -143,9 +91,5 @@ class LeafletUserView(APIView):
                 "response_schema": deals_schema,
             },
         )
-
-        if not cache_used:
-            cache.set(last_fetch_key, formatted_date, timeout=14 * 24 * 60 * 60)
-            cache.set(cache_key, files, timeout=14 * 24 * 60 * 60)
 
         return Response({"response": json.loads(response.text)}, status=201)

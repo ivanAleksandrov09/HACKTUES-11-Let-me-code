@@ -24,7 +24,7 @@ urlpatterns = [
     path(
         "transaction-stats/", TransactionStatsView.as_view(), name="transaction-stats"
     ),
-    path("leaflet/lidl", LidlLeafletView.as_view()),
+    path("leaflet/lidl/", LidlLeafletView.as_view()),
     path("leaflet/kaufland/", LeafletKauflandView.as_view()),
     path("leaflet/user/", LeafletUserView.as_view()),
     path("user/profile/", GetProfileView.as_view()),

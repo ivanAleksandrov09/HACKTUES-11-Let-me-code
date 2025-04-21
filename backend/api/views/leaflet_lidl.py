@@ -76,7 +76,7 @@ def get_leaflet_page_info(url):
             soup,
             """In the attached html script you can see the webpage of a supermarket. 
             I need you to find the URLs for the weekly leaflets, from which I want you to
-            extract the leaflet IDs from the URLs (likely in the date format 00-00-00-00)
+            extract the leaflet IDs from the URLs (likely in the date format 00-00-00-00-cccccc).
             Return an array of IDs.
             Don't format the response or explain your thought process.""",
         ],
@@ -107,6 +107,7 @@ class LidlLeafletView(APIView):
         else:
             last_fetch = None
 
+        files = []
         # Check whether enough time has passed before refetching best deals and leaflets (1 week)
         if last_fetch and (request_date - last_fetch) < timedelta(days=7):
 
@@ -116,14 +117,13 @@ class LidlLeafletView(APIView):
 
             cache_files_used = True
             cache_key = last_fetch
-            files = cache.get(cache_key)
+            files = cache.get(f"{cache_key}_lidl")
         else:
             # Try to find the unique url for the leaflet
             url = "https://www.lidl.bg/c/broshura/s10020060"
 
             leaflet_ids = get_leaflet_page_info(url)
 
-            files = []
             for leaflet_id in leaflet_ids:
                 # We construct the URL for the initial leaflet request to LIDLs endpoint
                 # and then fetch the PDF URL for the leaflet
@@ -139,37 +139,46 @@ class LidlLeafletView(APIView):
                 pdf_url = response.json()["flyer"]["pdfUrl"]
 
                 # download the pdf leaflet
-                downloaded_pdf = requests.get(pdf_url, timeout=120)
-                downloaded_pdf.raise_for_status()
-                file_bytes = downloaded_pdf.content
+                try:
+                    downloaded_pdf = requests.get(pdf_url, timeout=120)
+                    downloaded_pdf.raise_for_status()
+                    file_bytes = downloaded_pdf.content
+
+                    ai_uploaded_file = client.files.upload(
+                        file=(io.BytesIO(file_bytes)),
+                        config={"mime_type": "application/pdf"},
+                    )
+                    files.append(ai_uploaded_file)
 
                 # split the pdf into chunks and upload it
-                try:
-                    pdf_reader = PdfReader(io.BytesIO(file_bytes))
-                    total_pages = len(pdf_reader.pages)
-                    chunk = total_pages // PDF_CHUNKS
+                # try:
+                #     pdf_reader = PdfReader(io.BytesIO(file_bytes))
+                #     total_pages = len(pdf_reader.pages)
+                #     chunk = total_pages // PDF_CHUNKS
 
-                    for part in range(PDF_CHUNKS):
-                        pdf_writer = PdfWriter()
-                        start_page = part * chunk
-                        end_page = min((part + 1) * chunk, total_pages)
+                #     for part in range(PDF_CHUNKS):
+                #         pdf_writer = PdfWriter()
+                #         start_page = part * chunk
+                #         end_page = min((part + 1) * chunk, total_pages)
 
-                        if start_page >= total_pages:
-                            break
+                #         if start_page >= total_pages:
+                #             break
 
-                        for page_num in range(start_page, end_page):
-                            pdf_writer.add_page(pdf_reader.pages[page_num])
+                #         for page_num in range(start_page, end_page):
+                #             pdf_writer.add_page(pdf_reader.pages[page_num])
 
-                        output_bytes = io.BytesIO()
-                        pdf_writer.write(output_bytes)
-                        # seek - sets the stream position to beginning
-                        output_bytes.seek(0)
+                #         output_bytes = io.BytesIO()
+                #         pdf_writer.write(output_bytes)
+                #         # seek - sets the stream position to beginning
+                #         output_bytes.seek(0)
 
-                        ai_uploaded_file = client.files.upload(
-                            file=output_bytes,
-                            config={"mime_type": "application/pdf"},
-                        )
-                        files.append(ai_uploaded_file)
+                #         files_content.append(output_bytes)
+
+                #         ai_uploaded_file = client.files.upload(
+                #             file=output_bytes,
+                #             config={"mime_type": "application/pdf"},
+                #         )
+                #         files.append(ai_uploaded_file)
 
                 except Exception as e:
                     print(f"Error processing/uploading file: {e}")
@@ -194,4 +203,15 @@ class LidlLeafletView(APIView):
 
         cache.set(f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60)
 
-        return Response({"response": json.loads(response.text)}, status=200)
+        try:
+            parsed_response = json.loads(response.text)
+            cache.set(
+                f"{cache_key_files}_deals", response.text, timeout=14 * 24 * 60 * 60
+            )
+            return Response({"response": parsed_response}, status=200)
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {str(e)}")
+            print(f"Response text: {response.text}")
+            return Response(
+                {"error": "Invalid JSON response from AI model"}, status=500
+            )

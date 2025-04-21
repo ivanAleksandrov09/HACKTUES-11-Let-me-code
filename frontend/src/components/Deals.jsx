@@ -30,18 +30,34 @@ const StoreItemGrid = ({ items }) => {
   );
 };
 
-const Deals = ({isFetched}) => {
+const Deals = ({ isFetched }) => {
   const [activeStore, setActiveStore] = useState("kaufland");
   const [kaudflandItems, setKauflandItems] = useState([]);
+  const [lidlItems, setLidlItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchKauflandDeals = async () => {
     try {
-      const response = await api.get("/api/leaflet/base/");
+      const response = await api.get("/api/leaflet/kaufland/");
       if (response.status === 200) {
         // response.data.response because we return a json object "response"
         // containing the array of deals
         setKauflandItems(response.data.response);
-        isFetched();
+      } else {
+        alert("Failed to fetch Kaufland deals");
+      }
+    } catch (error) {
+      console.log("Error when fetching Kaufland deals: ", error);
+    }
+  };
+
+  const fetchLidlDeals = async () => {
+    try {
+      const response = await api.get("/api/leaflet/lidl/");
+      if (response.status === 200) {
+        // response.data.response because we return a json object "response"
+        // containing the array of deals
+        setLidlItems(response.data.response);
       } else {
         alert("Failed to fetch Kaufland deals");
       }
@@ -51,8 +67,20 @@ const Deals = ({isFetched}) => {
   };
 
   useEffect(() => {
-    fetchKauflandDeals();
-  }, []);
+    const loadDeals = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all([fetchKauflandDeals(), fetchLidlDeals()]);
+        isFetched();
+      } catch (error) {
+        console.error("Error loading deals:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadDeals();
+  }, [isFetched]);
 
   const handleClick = (store) => {
     setActiveStore(store);
@@ -92,43 +120,44 @@ const Deals = ({isFetched}) => {
         </thead>
         <tbody>
           <tr>
-            <td colSpan="3">
-              <div
-                className={`deals-content ${
-                  activeStore === "kaufland" ? "active" : ""
-                }`}
-              >
-                <StoreItemGrid items={kaudflandItems} />
+            {isLoading && (
+              <div className="spinner-container">
+                <div className="loading-spinner spinner-fst"></div>
+                <div className="loading-spinner spinner-scn"></div>
               </div>
-              <div
-                className={`deals-content ${
-                  activeStore === "lidl" ? "active" : ""
-                }`}
-              >
-                <StoreItemGrid
-                  items={[
-                    { name: "banani", value: "-20%" },
-                    { name: "qbylki", value: "-15%" },
-                    { name: "portokali", value: "-10%" },
-                    { name: "grozde", value: "-25%" },
-                  ]}
-                />
-              </div>
-              <div
-                className={`deals-content ${
-                  activeStore === "billa" ? "active" : ""
-                }`}
-              >
-                <StoreItemGrid
-                  items={[
-                    { name: "banani", value: "-20%" },
-                    { name: "qbylki", value: "-15%" },
-                    { name: "portokali", value: "-10%" },
-                    { name: "grozde", value: "-25%" },
-                  ]}
-                />
-              </div>
-            </td>
+            )}
+            {!isLoading && (
+              <td colSpan="3">
+                <div
+                  className={`deals-content ${
+                    activeStore === "kaufland" ? "active" : ""
+                  }`}
+                >
+                  <StoreItemGrid items={kaudflandItems} />
+                </div>
+                <div
+                  className={`deals-content ${
+                    activeStore === "lidl" ? "active" : ""
+                  }`}
+                >
+                  <StoreItemGrid items={lidlItems} />
+                </div>
+                <div
+                  className={`deals-content ${
+                    activeStore === "billa" ? "active" : ""
+                  }`}
+                >
+                  <StoreItemGrid
+                    items={[
+                      { name: "banani", value: "-20%" },
+                      { name: "qbylki", value: "-15%" },
+                      { name: "portokali", value: "-10%" },
+                      { name: "grozde", value: "-25%" },
+                    ]}
+                  />
+                </div>
+              </td>
+            )}
           </tr>
         </tbody>
       </table>
