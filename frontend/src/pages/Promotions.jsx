@@ -1,14 +1,18 @@
 import Deals from "../components/Deals";
 import DealSearcher from "../components/DealSearcher";
 import "../styles/pages/Promotion.css";
+import { useState } from "react";
+
 function Promotions() {
+  const [dealsFetched, setDealsFetched] = useState(false);
   return (
     <div className="promotions-container fade-in">
       <div style={{ minHeight: "90vh" }}>
-        <Deals />
+        <Deals isFetched={() => setDealsFetched(true)}/>
       </div>
       <div style={{ minHeight: "90vh" }}>
-        <DealSearcher />
+        {dealsFetched && <DealSearcher />}
+        {!dealsFetched && <div id='loadingSearcher'>Loading...</div>}
       </div>
     </div>
   );

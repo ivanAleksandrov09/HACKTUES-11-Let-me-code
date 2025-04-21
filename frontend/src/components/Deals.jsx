@@ -30,7 +30,7 @@ const StoreItemGrid = ({ items }) => {
   );
 };
 
-const Deals = () => {
+const Deals = ({isFetched}) => {
   const [activeStore, setActiveStore] = useState("kaufland");
   const [kaudflandItems, setKauflandItems] = useState([]);
 
@@ -41,6 +41,7 @@ const Deals = () => {
         // response.data.response because we return a json object "response"
         // containing the array of deals
         setKauflandItems(response.data.response);
+        isFetched();
       } else {
         alert("Failed to fetch Kaufland deals");
       }
