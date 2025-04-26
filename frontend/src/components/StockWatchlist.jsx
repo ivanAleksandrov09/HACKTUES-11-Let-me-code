@@ -67,7 +67,7 @@ const StockWatchlist = () => {
           type="text"
           value={newSymbol}
           onChange={handleSearchChange}
-          placeholder="Search stock symbol or name..."
+          placeholder="Search stock symbol or name"
           className="search-btn-stocks"
         />
         {isSearching && (

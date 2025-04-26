@@ -1,63 +1,73 @@
-.relative{
-    position:sticky;
-    top:0;
-    z-index:10;
+.relative {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     justify-self: baseline;
     background-color: white;
-    box-shadow: 0px 0px 3px rgb(0,0,0,0.1);
+    box-shadow: 0px 0px 3px rgb(0, 0, 0, 0.1);
     min-height: 100px;
-    min-width: 250px;
-    margin-left:3%;
+    min-width: 14vw;
+    margin-left: 3%;
     margin-top: 2%;
+    padding: 1%;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-.search-btn-stocks{
+.relative input {
+    min-width: 12vw;
+}
+
+.search-btn-stocks {
     border-radius: 5px;
+    min-width: 14vw;
     max-width: 150%;
     max-height: 60px;
     padding: 10%;
-    margin:10% 10% 0% 10%;
-    box-shadow: 0px 0px 3px rgb(0, 0, 0, 0.1);
-    border:1px solid var(--secondary-color);
+    box-shadow: 3px 3px 3px rgb(0, 0, 0, 0.1);
+    border: 1px solid var(--secondary-color);
 }
 
-.chart-item-container{
+.chart-item-container {
     max-width: fit-content;
     border-radius: 5px;
-    padding:2%;
+    padding: 2%;
     box-shadow: 0px 0px 3px rgb(0, 0, 0, 0.1);
 }
 
-.chart-item{
-    display:flex;
+.chart-item {
+    display: flex;
     border-radius: 5px;
-    padding:2%;
-    margin-left:7%;
+    padding: 2%;
+    margin-left: 7%;
     box-shadow: 0px 0px 3px rgb(0, 0, 0, 0.1);
 }
 
-.charts-container{
-    display:grid;
+.charts-container {
+    display: grid;
     grid-template-columns: repeat(auto-fit, 47%);
     grid-template-rows: repeat(auto-fit);
-    gap:3%;
-    margin-bottom:10%
+    gap: 3%;
+    margin-bottom: 10%
 }
 
 
-.result-stocks.second{
+.result-stocks.second {
     padding: 5%, 5%, 5%, 5%;
-    box-shadow: 0px 0px 3px rgb(0,0,0, 0.1);
-    margin-top: 0%;
+    box-shadow: 0px 0px 3px rgb(0, 0, 0, 0.1);
+    margin-top: 3%;
     width: 90%;
     cursor: pointer;
     word-wrap: none;
     justify-self: center;
+    align-self: center;
     overlay: auto;
 }
 
-.result-stocks.first{
+.result-stocks.first {
     margin-left: 5%;
     padding-bottom: 5%;
 }

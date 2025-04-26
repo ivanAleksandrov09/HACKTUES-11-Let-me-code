@@ -22,38 +22,38 @@ leaflet_info_schema = {
     },
 }
 
-prompt = """Extract EXACTLY 5 deals from the leaflet PDF with these strict requirements:
+prompt = """Analyze the PDF leaflets carefully and extract exactly 5 deals with the highest percentage discounts. For each deal:
 
-1. PRICE VALIDATION:
-   - Only extract deals with CLEARLY VISIBLE current and original prices
-   - Price MUST be in Bulgarian Lev (лв/BGN) format
-   - Prices MUST be shown for identical product quantity/weight
-   - If a price is ambiguous or unclear, SKIP that deal
-   - REJECT any "from" prices or price ranges
+1. PRIORITY ITEMS (in order):
+   - Common groceries (food, beverages)
+   - Household essentials (cleaning, hygiene)
+   - Fresh produce and meats
+   - Other supermarket items
 
-2. PRODUCT VALIDATION:
-   - Only include products where you can see the EXACT name and package size
-   - Name MUST include: brand name, product type, size/weight
-   - REJECT products with incomplete or unclear descriptions
-   - REJECT deals where you're not 100% certain of accuracy
+2. Product Information Requirements:
+   - Full product name with brand
+   - Package size/weight/volume
+   - Product variety/type (if applicable)
+   - Format as: '{brand} {product name} {variety} {size} - was {original_price} BGN, now {new_price} BGN'
 
-3. OUTPUT FORMAT:
-   For each deal:
-   - info: "{exact_product_name} {size/weight} - was {original_price:.2f} BGN, now {current_price:.2f} BGN"
-   - discount: Calculate as ((original - current) / original * 100), round to whole number
-   - supermarket: Always "Lidl"
 
-4. SORTING & FILTERING:
-   - Sort by discount percentage (highest first)
-   - Only include deals with discount ≥ 20%
-   - Return EXACTLY 5 deals, no more, no less
-   - If fewer than 5 valid deals found, fill remaining slots with null entries
+Sort by discount percentage (highest first) among common items.
+Return exactly 5 deals matching these criteria.
 
-5. STRICT RULES:
-   - NO price hallucination - if price is not 100% clear, skip it
-   - NO name hallucination - if product details are not 100% clear, skip it
-   - Double-check all calculations
-   - Verify all information is directly from the PDF"""
+2. In the 'discount' field:
+   !!! ALWAYS MAKE SURE THE DEALS YOU ARE EXTRACTING HAVE CLEARLY STATED BEFORE PRICES!!!
+   - Calculate the exact percentage discount
+   - Return as a number (e.g., 50 for 50% discount)
+   - Round to nearest whole number
+
+3. Set 'supermarket' field to 'Kaufland'
+
+4. Validation Rules:
+   - Only extract deals with clear before/after prices
+   - Must include complete product details
+   - Skip items with ambiguous descriptions
+   - Focus on everyday supermarket items over specialty products
+"""
 
 deals_schema = {
     "type": "array",

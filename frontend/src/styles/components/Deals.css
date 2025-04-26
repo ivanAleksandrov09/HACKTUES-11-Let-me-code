@@ -1,12 +1,12 @@
 .deals-container {
     max-width: 30vw;
     min-width: fit-content;
-    min-height: 90vh;
+    height: 95%;
     margin: 2rem auto;
     padding: 2rem;
     background: var(--background-color);
     border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
 
 .deals-container h2 {
@@ -21,13 +21,13 @@
 .deals-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 2px; 
+    border-spacing: 2px;
     margin: 0 auto;
 }
 
 .deals-table thead tr {
     display: flex;
-    justify-content: space-between;  
+    justify-content: space-between;
     padding: 1rem;
 }
 
@@ -47,12 +47,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .button.active {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     border: 3px solid #2c3e50;
 }
 
@@ -73,14 +73,16 @@
     background: white;
     border-radius: 15px;
     padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .deals-content.active {
     display: block;
 }
 
-.kauland, .lidl, .billa {
+.kauland,
+.lidl,
+.billa {
     margin-top: 2rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -101,13 +103,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease;
 }
 
 .deal-item:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .deal-name {
@@ -141,9 +143,11 @@
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
+
     100% {
         transform: scale(1);
     }
@@ -153,9 +157,11 @@
     0% {
         transform: translateY(0px);
     }
+
     50% {
         transform: translateY(-3px);
     }
+
     100% {
         transform: translateY(0px);
     }
@@ -165,6 +171,7 @@
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -191,15 +198,16 @@
     animation: loading-spinner 1.25s ease-in-out infinite;
 }
 
-.spinner-scn{
+.spinner-scn {
     position: relative;
-    animation-delay:0.04s;
+    animation-delay: 0.04s;
     border: 0.5vw solid var(--primary-color);
     opacity: 0.5;
     margin-top: 0;
-    top:-5vw;
+    top: -5vw;
 }
 
-.lidl, .billa {
+.lidl,
+.billa {
     display: none;
 }
