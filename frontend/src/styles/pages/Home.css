@@ -55,9 +55,13 @@
   border: none;
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-base);
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .submit_btn:hover {
-  background-color: #1557b0;
+  background-color: var(--hover-primary-color);
+}
+
+.submit_btn:active{
+  opacity: 0.8;
 }

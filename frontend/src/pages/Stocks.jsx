@@ -30,6 +30,7 @@ const Stocks = () => {
     const [userStocks, setUserStocks] = useState(Object.entries(mockStocks));
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    var id_place = 1
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -44,13 +45,13 @@ const Stocks = () => {
                             <h2>{stockData.name} ({symbol})</h2>
                             <div className="stock-price">
                                 <span>${stockData.price_per_share}</span>
-                                <small>Qty: {stockData.quantity}</small>
                             </div>
                         </div>
                         <div className="stock-chart">
                             <StockChart symbol={symbol} />
                         </div>
                     </div>
+                    
                 ))}
             </div>
         </div>
