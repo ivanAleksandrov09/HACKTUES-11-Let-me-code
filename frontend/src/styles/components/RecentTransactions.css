@@ -17,6 +17,10 @@
   background-color: var(--background-color);
 }
 
+.transactions-table tr{
+  transition: all var(--transition-fast);
+}
+
 .transactions-table tr:hover {
   background-color: var(--background-color);
 }

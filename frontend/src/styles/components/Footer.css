@@ -92,7 +92,7 @@
     color: #2c3e50;
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
     padding: 0.5rem 1rem;
     border-radius: 8px;
     background: transparent;
@@ -102,7 +102,7 @@
 .footer-btn:hover {
     background: #f8f9fa;
     color: #1c5b9b;
-    transform: translateX(5px);
+    transform: translateX(1px);
 }
 
 @media (max-width: 768px) {

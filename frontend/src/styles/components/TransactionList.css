@@ -26,9 +26,13 @@
   border-radius: var(--border-radius-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: var(--font-size-small);
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .delete-btn:hover {
   background-color: #c82333;
+}
+
+.delete-btn:active{
+  opacity: 0.9;
 }

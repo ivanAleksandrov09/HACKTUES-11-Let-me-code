@@ -1,3 +1,4 @@
+import "../styles/components/StockWatchlist.css"
 import React, { useState, useEffect } from "react";
 import api from "../api";
 import {
@@ -60,25 +61,25 @@ const StockWatchlist = () => {
   };
 
   return (
-    <div>
+    <div className="SW-container">
       <div className="relative">
         <input
           type="text"
           value={newSymbol}
           onChange={handleSearchChange}
           placeholder="Search stock symbol or name..."
-          className="w-full p-2 border rounded"
+          className="search-btn-stocks"
         />
         {isSearching && (
           <div className="text-sm text-gray-500">Searching...</div>
         )}
         {searchResults.length > 0 && (
-          <div className="absolute z-10 w-full bg-white border rounded-b shadow-lg">
+          <div className="result-stocks first">
             {searchResults.map((stock) => (
               <div
                 key={stock.symbol}
                 onClick={() => handleSelectStock(stock)}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
+                className="result-stocks second"
               >
                 <span className="font-bold">{stock.symbol}</span> -{" "}
                 <span>{stock.name}</span>
@@ -88,20 +89,22 @@ const StockWatchlist = () => {
         )}
       </div>
 
-      <div className="charts-container mt-4">
+      <div className="charts-container">
         {watchlist.map((stock) => (
           <div key={stock.symbol} className="chart-item">
-            <h3>
-              {stock.name} ({stock.symbol})
-            </h3>
-            <div className="chart">
-              <LineChart width={600} height={300} data={stock.history}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="price" stroke="#8884d8" />
-              </LineChart>
+            <div className="chart-item-container">
+              <h3>
+                {stock.name} ({stock.symbol})
+              </h3>
+              <div className="chart">
+                <LineChart width={600} height={300} data={stock.history}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="price" stroke="#8884d8" />
+                </LineChart>
+              </div>
             </div>
           </div>
         ))}
