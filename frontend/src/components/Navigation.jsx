@@ -20,6 +20,9 @@ function Navigation() {
         <li>
           <Link to="/promotions">Promotions</Link>
         </li>
+        <li>
+          <Link to="/stocks">Stocks</Link>
+        </li>
       </ul>
       <div>
         <Link className="btn-nav btn-primary" to="/Login">

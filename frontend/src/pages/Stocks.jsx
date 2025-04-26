@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StockChart from '../components/StockChart';
 import '../styles/pages/Stocks.css';
 
-const UserStocks = () => {
+const Stocks = () => {
     // Mock data for demonstration
     const mockStocks = {
         'AAPL': {
@@ -57,4 +57,4 @@ const UserStocks = () => {
     );
 };
 
-export default UserStocks;
+export default Stocks;

@@ -8,7 +8,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TransactionList from "./components/TransactionList";
 import Transactions from "./pages/Transactions";
-import Footer from "./components/Footer";
+import Footer from "./components/Loyout";
 import Promotions from "./pages/Promotions";
 import Stocks from "./pages/Stocks";
 
@@ -51,12 +51,27 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/promotions" element={<Promotions />} />
+          <Route
+            path="/promotions"
+            element={
+              <ProtectedRoute>
+                <Promotions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/stocks"
+            element={
+              <ProtectedRoute>
+                <Stocks />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/stocks" element={<Stocks />} />
+        
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
