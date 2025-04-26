@@ -22,44 +22,38 @@ leaflet_info_schema = {
     },
 }
 
-prompt = """Extract supermarket deals from PDF leaflets following these strict validation rules:
+prompt = """Extract EXACTLY 5 deals from the leaflet PDF with these strict requirements:
 
-1. INPUT VALIDATION:
-   - Validate input contains:
-     * Common grocery/household items
-     * 2-50 characters length
-     * Letters, spaces, numbers
-   - If invalid, return [{"info": "Invalid request", "discount": 0, "supermarket": "x"}]
+1. PRICE VALIDATION:
+   - Only extract deals with CLEARLY VISIBLE current and original prices
+   - Price MUST be in Bulgarian Lev (лв/BGN) format
+   - Prices MUST be shown for identical product quantity/weight
+   - If a price is ambiguous or unclear, SKIP that deal
+   - REJECT any "from" prices or price ranges
 
-2. DEAL PROCESSING:
-   - Search for products containing the input term (case-insensitive)
-   - STRICT VALIDATION REQUIREMENTS:
-     * MUST have clear, unambiguous current price
-     * MUST have clear, unambiguous original price
-     * MUST include complete product name with brand and variety when available
-     * MUST be able to verify both prices are for the same product/quantity
-     * MUST verify source leaflet before assigning supermarket name
-   - Format: '[Full Product Name with Details] - [Current Price] лв (Was: [Original Price] лв)'
-   - Include brand names and product specifics in the name when available
-   - Include package size/weight when available
-   - For supermarket field:
-     * Use 'kaufland' ONLY for deals found in Kaufland leaflets
-     * Use 'lidl' ONLY for deals found in Lidl leaflets
-     * Verify leaflet source before assigning supermarket name
-   - Calculate discount percentage: (original_price - current_price) / original_price * 100
+2. PRODUCT VALIDATION:
+   - Only include products where you can see the EXACT name and package size
+   - Name MUST include: brand name, product type, size/weight
+   - REJECT products with incomplete or unclear descriptions
+   - REJECT deals where you're not 100% certain of accuracy
+
+3. OUTPUT FORMAT:
+   For each deal:
+   - info: "{exact_product_name} {size/weight} - was {original_price:.2f} BGN, now {current_price:.2f} BGN"
+   - discount: Calculate as ((original - current) / original * 100), round to whole number
+   - supermarket: Always "Lidl"
+
+4. SORTING & FILTERING:
    - Sort by discount percentage (highest first)
-   - Maximum 10 results with highest discounts
-   - Minimum discount threshold: 15%
-   - REJECT ANY PRODUCT IF:
-     * Any price is unclear or ambiguous
-     * Cannot verify price comparison validity
-     * Cannot verify supermarket source
-     * Product description is incomplete
+   - Only include deals with discount ≥ 20%
+   - Return EXACTLY 5 deals, no more, no less
+   - If fewer than 5 valid deals found, fill remaining slots with null entries
 
-3. LANGUAGE:
-   - Accept both Bulgarian and English product names
-   - Use original product naming from leaflet
-"""
+5. STRICT RULES:
+   - NO price hallucination - if price is not 100% clear, skip it
+   - NO name hallucination - if product details are not 100% clear, skip it
+   - Double-check all calculations
+   - Verify all information is directly from the PDF"""
 
 deals_schema = {
     "type": "array",
@@ -157,50 +151,87 @@ class LidlLeafletView(APIView):
                 pdf_url = response.json()["flyer"]["pdfUrl"]
                 print(f"Found LIDL PDF leaflet: {pdf_url}")
 
-                # download the pdf leaflet
+                # Create a session with retry mechanism
+                session = requests.Session()
+                adapter = requests.adapters.HTTPAdapter(
+                    max_retries=requests.adapters.Retry(
+                        total=5,
+                        backoff_factor=0.5,
+                        status_forcelist=[500, 502, 503, 504],
+                    ),
+                    pool_connections=20,
+                    pool_maxsize=20,
+                )
+                session.mount("http://", adapter)
+                session.mount("https://", adapter)
+
+                # download the pdf leaflet with extended timeout
                 try:
-                    downloaded_pdf = requests.get(pdf_url, timeout=120)
-                    downloaded_pdf.raise_for_status()
-                    file_bytes = downloaded_pdf.content
-
-                    ai_uploaded_file = client.files.upload(
-                        file=(io.BytesIO(file_bytes)),
-                        config={"mime_type": "application/pdf"},
+                    downloaded_pdf = session.get(
+                        pdf_url,
+                        timeout=(60, 600),  # (connect timeout, read timeout)
+                        stream=True,
                     )
-                    files.append(ai_uploaded_file)
+                    downloaded_pdf.raise_for_status()
 
-                # split the pdf into chunks and upload it
-                # try:
-                #     pdf_reader = PdfReader(io.BytesIO(file_bytes))
-                #     total_pages = len(pdf_reader.pages)
-                #     chunk = total_pages // PDF_CHUNKS
+                    # Download in smaller chunks
+                    chunks = []
+                    for chunk in downloaded_pdf.iter_content(
+                        chunk_size=256 * 1024
+                    ):  # 256KB chunks
+                        if chunk:
+                            chunks.append(chunk)
+                    file_bytes = b"".join(chunks)
 
-                #     for part in range(PDF_CHUNKS):
-                #         pdf_writer = PdfWriter()
-                #         start_page = part * chunk
-                #         end_page = min((part + 1) * chunk, total_pages)
+                    # ai_uploaded_file = client.files.upload(
+                    #     file=(io.BytesIO(file_bytes)),
+                    #     config={"mime_type": "application/pdf"},
+                    # )
+                    # files.append(ai_uploaded_file)
 
-                #         if start_page >= total_pages:
-                #             break
+                    # split the pdf into chunks and upload it
 
-                #         for page_num in range(start_page, end_page):
-                #             pdf_writer.add_page(pdf_reader.pages[page_num])
+                    pdf_reader = PdfReader(io.BytesIO(file_bytes))
+                    total_pages = len(pdf_reader.pages)
+                    chunk = total_pages // PDF_CHUNKS
 
-                #         output_bytes = io.BytesIO()
-                #         pdf_writer.write(output_bytes)
-                #         # seek - sets the stream position to beginning
-                #         output_bytes.seek(0)
+                    for part in range(PDF_CHUNKS):
+                        pdf_writer = PdfWriter()
+                        start_page = part * chunk
+                        end_page = min((part + 1) * chunk, total_pages)
 
-                #         files_content.append(output_bytes)
+                        if start_page >= total_pages:
+                            break
 
-                #         ai_uploaded_file = client.files.upload(
-                #             file=output_bytes,
-                #             config={"mime_type": "application/pdf"},
-                #         )
-                #         files.append(ai_uploaded_file)
+                        for page_num in range(start_page, end_page):
+                            pdf_writer.add_page(pdf_reader.pages[page_num])
 
+                        output_bytes = io.BytesIO()
+                        pdf_writer.write(output_bytes)
+                        # seek - sets the stream position to beginning
+                        output_bytes.seek(0)
+
+                        # Set default timeout for the client call
+                        client.timeout = 300  # 5 minute timeout
+
+                        ai_uploaded_file = client.files.upload(
+                            file=output_bytes,
+                            config={"mime_type": "application/pdf"},
+                        )
+                        files.append(ai_uploaded_file)
+
+                except requests.exceptions.ConnectTimeout:
+                    print(f"Connection timeout while downloading PDF from {pdf_url}")
+                    continue
+                except requests.exceptions.ReadTimeout:
+                    print(f"Read timeout while downloading PDF from {pdf_url}")
+                    continue
                 except Exception as e:
-                    print(f"Error processing/uploading file: {e}")
+                    print(f"Error processing/uploading file: {str(e)}")
+                    print(f"Error type: {type(e)}")
+                    print(
+                        f"Error details: {str(e.__dict__)}"
+                    )  # Added more error details
                     continue
 
         # After downloading PDFs, we analyze them here

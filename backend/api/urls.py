@@ -1,15 +1,17 @@
+from api.views.stocks import StockSearchView, WatchlistView
 from django.urls import path
-from .views.pdf_import import UploadBankStatementView
-from .views.user_summary import UserSummaryView
+
+from .views.assistant import AssistantView
+from .views.leaflet_kaufland import LeafletKauflandView
 from .views.leaflet_lidl import LidlLeafletView
 from .views.leaflet_user import LeafletUserView
-from .views.leaflet_kaufland import LeafletKauflandView
-from .views.assistant import AssistantView
+from .views.pdf_import import UploadBankStatementView
+from .views.user_summary import UserSummaryView
 from .views.views import (
-    TransactionListView,
-    TransactionDeleteView,
-    TransactionStatsView,
     GetProfileView,
+    TransactionDeleteView,
+    TransactionListView,
+    TransactionStatsView,
 )
 
 urlpatterns = [
@@ -29,4 +31,6 @@ urlpatterns = [
     path("leaflet/user/", LeafletUserView.as_view()),
     path("user/profile/", GetProfileView.as_view()),
     path("chat/", AssistantView.as_view()),
+    path("stocks/watchlist/", WatchlistView.as_view(), name="watchlist"),
+    path("stocks/search/", StockSearchView.as_view(), name="search_stocks"),
 ]
