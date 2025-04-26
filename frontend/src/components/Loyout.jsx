@@ -16,7 +16,7 @@ export default function Footer() {
                 <div className="footer-content">
                     <div className="footer-section">
                         <h4>About Us</h4>
-                        <p>Smart Budget helps you track and manage your expenses efficiently.</p>
+                        <p>Finance Dashboard helps you track and manage your expenses efficiently.</p>
                     </div>
                     <div className="footer-section">
                         <h4>Quick Links</h4>
